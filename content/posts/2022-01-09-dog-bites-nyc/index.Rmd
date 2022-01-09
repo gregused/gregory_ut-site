@@ -14,7 +14,14 @@ tags:
 ---
 
 
-```{r setup}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load packages and data
+### you can get the data from here <https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg>
+
+```{r}
 knitr::opts_chunk$set(echo = TRUE)
 library(RSocrata)
 library(tidyverse)
@@ -22,20 +29,24 @@ library(tigris)
 library(sf)
 library(here)
 library(tmap)
-```
 
-```{r}
-# get data
-# filter for NYC boroughs
+
 dog_bite_raw <- 
   read.socrata("https://data.cityofnewyork.us/resource/rsgh-akpg.csv") %>%
   as_tibble() %>%
   filter(borough %in% c("Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"))
+```
 
-# count how many dog bites in each borough.
+
+## Count how many dog bites in each borough.
+```{r}
 dog_bite_raw %>%
   count(borough)
+```
 
+
+## Get zip-code data
+```{r}
 # get nyc spatial boundaries zip codes
 nyc <- tigris::zctas(year = 2010, state = "NY")
 
@@ -59,6 +70,10 @@ dog_bite_raw %>%
 glimpse(nyc)
 glimpse(dog_bite_raw)
 
+```
+
+## Join data together
+```{r}
 # join to spatial data
 dog_full <- nyc %>%
   rename(zipcode = zcta5ce10) %>%
@@ -73,7 +88,10 @@ dogg <- dog_full %>%
   group_by(zipcode) %>%
   summarize(bites = n())
 
+```
 
+## Create Maps
+```{r}
 dogg %>%
   ggplot(aes(fill = bites)) +
   geom_sf(lwd = 0.3) +

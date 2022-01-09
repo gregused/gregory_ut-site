@@ -19,12 +19,25 @@ tags:
 <h2>Load packages and data</h2>
 <div id="you-can-get-the-data-from-here-httpsdata.cityofnewyork.ushealthdohmh-dog-bite-datarsgh-akpg" class="section level3">
 <h3>you can get the data from here <a href="https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg" class="uri">https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg</a></h3>
+<pre class="r"><code>library(RSocrata)</code></pre>
 <pre><code>## Warning: package &#39;RSocrata&#39; was built under R version 4.1.1</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.2</code></pre>
 <pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.1</code></pre>
 <pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.2</code></pre>
+<pre class="r"><code>library(tigris)</code></pre>
 <pre><code>## Warning: package &#39;tigris&#39; was built under R version 4.1.1</code></pre>
+<pre class="r"><code>library(sf)</code></pre>
 <pre><code>## Warning: package &#39;sf&#39; was built under R version 4.1.2</code></pre>
+<pre class="r"><code>library(here)
+library(tmap)
+library(rgdal)</code></pre>
+<pre><code>## Warning: package &#39;rgdal&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Warning: package &#39;sp&#39; was built under R version 4.1.2</code></pre>
+<pre class="r"><code>dog_bite_raw &lt;- 
+  read.socrata(&quot;https://data.cityofnewyork.us/resource/rsgh-akpg.csv&quot;) %&gt;%
+  as_tibble() %&gt;%
+  filter(borough %in% c(&quot;Brooklyn&quot;, &quot;Manhattan&quot;, &quot;Queens&quot;, &quot;Bronx&quot;, &quot;Staten Island&quot;))</code></pre>
 </div>
 </div>
 <div id="count-how-many-dog-bites-in-each-borough." class="section level2">
@@ -39,9 +52,18 @@ tags:
 ## 3 Manhattan      2354
 ## 4 Queens         2520
 ## 5 Staten Island   931</code></pre>
+<pre class="r"><code>dog_bite_raw %&gt;%
+  count()</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##       n
+##   &lt;int&gt;
+## 1  9843</code></pre>
 </div>
 <div id="get-zip-code-data" class="section level2">
 <h2>Get zip-code data</h2>
+<pre class="r"><code># get nyc spatial boundaries zip codes
+nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
+<pre><code>## ZCTAs can take several minutes to download.  To cache the data and avoid re-downloading in future R sessions, set `options(tigris_use_cache = TRUE)`</code></pre>
 <pre><code>## 
   |                                                                            
   |                                                                      |   0%
@@ -198,8 +220,6 @@ tags:
   |                                                                            
   |================================                                      |  46%
   |                                                                            
-  |=================================                                     |  46%
-  |                                                                            
   |=================================                                     |  47%
   |                                                                            
   |=================================                                     |  48%
@@ -231,6 +251,8 @@ tags:
   |=======================================                               |  55%
   |                                                                            
   |=======================================                               |  56%
+  |                                                                            
+  |========================================                              |  56%
   |                                                                            
   |========================================                              |  57%
   |                                                                            
@@ -294,6 +316,8 @@ tags:
   |                                                                            
   |=====================================================                 |  76%
   |                                                                            
+  |======================================================                |  76%
+  |                                                                            
   |======================================================                |  77%
   |                                                                            
   |======================================================                |  78%
@@ -348,8 +372,6 @@ tags:
   |                                                                            
   |=================================================================     |  93%
   |                                                                            
-  |=================================================================     |  94%
-  |                                                                            
   |==================================================================    |  94%
   |                                                                            
   |==================================================================    |  95%
@@ -369,12 +391,15 @@ tags:
   |======================================================================|  99%
   |                                                                            
   |======================================================================| 100%</code></pre>
+<pre class="r"><code># filter for zipcodes in dog bite dataframe
+nyc2 &lt;- nyc %&gt;%
+  filter(ZCTA5CE10 %in% dog_bite_raw$zipcode)</code></pre>
 </div>
 <div id="quick-plot" class="section level2">
 <h2>Quick plot</h2>
 <pre class="r"><code>nyc2 &lt;- janitor::clean_names(nyc2)
 
-head(dog_bite_raw)</code></pre>
+head(dog_bite_raw)   </code></pre>
 <pre><code>## # A tibble: 6 x 9
 ##   uniqueid dateofbite          species breed     age   gender spayneuter borough
 ##      &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;  
@@ -385,7 +410,8 @@ head(dog_bite_raw)</code></pre>
 ## 5        5 2015-01-03 00:00:00 DOG     &quot;America~ &quot;1&quot;   M      false      Brookl~
 ## 6        6 2015-01-05 00:00:00 DOG     &quot;America~ &quot;1&quot;   F      false      Brookl~
 ## # ... with 1 more variable: zipcode &lt;chr&gt;</code></pre>
-<pre class="r"><code>dog_bite_raw %&gt;%
+<pre class="r"><code># bar plot
+dog_bite_raw %&gt;%
   group_by(borough) %&gt;%
   summarise(n = n()) %&gt;%
   ggplot(aes(borough, n, fill = borough)) +

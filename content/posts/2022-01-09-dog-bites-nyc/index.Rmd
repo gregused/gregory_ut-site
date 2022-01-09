@@ -28,8 +28,9 @@ library(sf)
 library(here)
 library(tmap)
 library(rgdal)
+```
 
-
+```{r}
 dog_bite_raw <- 
   read.socrata("https://data.cityofnewyork.us/resource/rsgh-akpg.csv") %>%
   as_tibble() %>%

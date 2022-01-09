@@ -1,5 +1,5 @@
 baseURL: "https://gregoryut.netlify.app/"
-title: Your title
+title: Greg's Blog
 theme: hugo-theme-m10c
 paginate: 8
 menu:

@@ -19,37 +19,12 @@ tags:
 <h2>Load packages and data</h2>
 <div id="you-can-get-the-data-from-here-httpsdata.cityofnewyork.ushealthdohmh-dog-bite-datarsgh-akpg" class="section level3">
 <h3>you can get the data from here <a href="https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg" class="uri">https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg</a></h3>
-<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE)
-library(RSocrata)</code></pre>
 <pre><code>## Warning: package &#39;RSocrata&#39; was built under R version 4.1.1</code></pre>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
-<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
-## v tibble  3.1.6     v dplyr   1.0.7
-## v tidyr   1.1.4     v stringr 1.4.0
-## v readr   2.1.1     v forcats 0.5.1</code></pre>
 <pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.2</code></pre>
 <pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.1</code></pre>
 <pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(tigris)</code></pre>
 <pre><code>## Warning: package &#39;tigris&#39; was built under R version 4.1.1</code></pre>
-<pre><code>## To enable 
-## caching of data, set `options(tigris_use_cache = TRUE)` in your R script or .Rprofile.</code></pre>
-<pre class="r"><code>library(sf)</code></pre>
 <pre><code>## Warning: package &#39;sf&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## Linking to GEOS 3.9.1, GDAL 3.2.1, PROJ 7.2.1; sf_use_s2() is TRUE</code></pre>
-<pre class="r"><code>library(here)</code></pre>
-<pre><code>## here() starts at C:/Users/grish/Desktop/gregory_ut/gregory_ut-site</code></pre>
-<pre class="r"><code>library(tmap)
-
-
-dog_bite_raw &lt;- 
-  read.socrata(&quot;https://data.cityofnewyork.us/resource/rsgh-akpg.csv&quot;) %&gt;%
-  as_tibble() %&gt;%
-  filter(borough %in% c(&quot;Brooklyn&quot;, &quot;Manhattan&quot;, &quot;Queens&quot;, &quot;Bronx&quot;, &quot;Staten Island&quot;))</code></pre>
 </div>
 </div>
 <div id="count-how-many-dog-bites-in-each-borough." class="section level2">
@@ -157,8 +132,6 @@ dog_bite_raw &lt;-
   |                                                                            
   |==================                                                    |  26%
   |                                                                            
-  |===================                                                   |  26%
-  |                                                                            
   |===================                                                   |  27%
   |                                                                            
   |===================                                                   |  28%
@@ -190,6 +163,8 @@ dog_bite_raw &lt;-
   |=========================                                             |  35%
   |                                                                            
   |=========================                                             |  36%
+  |                                                                            
+  |==========================                                            |  36%
   |                                                                            
   |==========================                                            |  37%
   |                                                                            
@@ -257,8 +232,6 @@ dog_bite_raw &lt;-
   |                                                                            
   |=======================================                               |  56%
   |                                                                            
-  |========================================                              |  56%
-  |                                                                            
   |========================================                              |  57%
   |                                                                            
   |========================================                              |  58%
@@ -291,8 +264,6 @@ dog_bite_raw &lt;-
   |                                                                            
   |==============================================                        |  66%
   |                                                                            
-  |===============================================                       |  66%
-  |                                                                            
   |===============================================                       |  67%
   |                                                                            
   |===============================================                       |  68%
@@ -322,8 +293,6 @@ dog_bite_raw &lt;-
   |=====================================================                 |  75%
   |                                                                            
   |=====================================================                 |  76%
-  |                                                                            
-  |======================================================                |  76%
   |                                                                            
   |======================================================                |  77%
   |                                                                            

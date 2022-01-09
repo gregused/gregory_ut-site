@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Load packages and data
 ### you can get the data from here <https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg>
 
-```{r, message=FALSE, echo=FALSE}
+```{r, message=FALSE}
 library(RSocrata)
 library(tidyverse)
 library(tigris)
@@ -44,7 +44,7 @@ dog_bite_raw %>%
 
 
 ## Get zip-code data
-```{r, message=FALSE, echo=FALSE}
+```{r, message=FALSE}
 # get nyc spatial boundaries zip codes
 nyc <- tigris::zctas(year = 2010, state = "NY")
 

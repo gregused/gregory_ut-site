@@ -17,8 +17,8 @@ menu:
       url: /about/
       weight: 3
 params:
-  author: John Doe
-  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  author: Gregory
+  description: I like R and Python for data analytics.
   menu_item_separator: ' - '
   social:
     - icon: github

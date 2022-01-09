@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Load packages and data
 ### you can get the data from here <https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg>
 
-```{r, message=FALSE, echo=FALSE}
+```{r, message=FALSE, warning=FALSE}
 library(RSocrata)
 library(tidyverse)
 library(tigris)

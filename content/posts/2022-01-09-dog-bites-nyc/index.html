@@ -19,19 +19,12 @@ tags:
 <h2>Load packages and data</h2>
 <div id="you-can-get-the-data-from-here-httpsdata.cityofnewyork.ushealthdohmh-dog-bite-datarsgh-akpg" class="section level3">
 <h3>you can get the data from here <a href="https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg" class="uri">https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg</a></h3>
-<pre class="r"><code>library(RSocrata)</code></pre>
 <pre><code>## Warning: package &#39;RSocrata&#39; was built under R version 4.1.1</code></pre>
-<pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.2</code></pre>
 <pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.1</code></pre>
 <pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.2</code></pre>
-<pre class="r"><code>library(tigris)</code></pre>
 <pre><code>## Warning: package &#39;tigris&#39; was built under R version 4.1.1</code></pre>
-<pre class="r"><code>library(sf)</code></pre>
 <pre><code>## Warning: package &#39;sf&#39; was built under R version 4.1.2</code></pre>
-<pre class="r"><code>library(here)
-library(tmap)
-library(rgdal)</code></pre>
 <pre><code>## Warning: package &#39;rgdal&#39; was built under R version 4.1.2</code></pre>
 <pre><code>## Warning: package &#39;sp&#39; was built under R version 4.1.2</code></pre>
 <pre class="r"><code>dog_bite_raw &lt;- 
@@ -87,8 +80,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |====                                                                  |   5%
   |                                                                            
   |====                                                                  |   6%
-  |                                                                            
-  |=====                                                                 |   6%
   |                                                                            
   |=====                                                                 |   7%
   |                                                                            

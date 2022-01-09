@@ -53,6 +53,10 @@ nyc <- tigris::zctas(year = 2010, state = "NY")
 nyc2 <- nyc %>%
   filter(ZCTA5CE10 %in% dog_bite_raw$zipcode)
 
+```
+
+## Quick plot
+```{r}
 nyc2 <- janitor::clean_names(nyc2)
 
 head(dog_bite_raw)

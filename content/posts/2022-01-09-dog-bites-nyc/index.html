@@ -160,8 +160,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |==================                                                    |  26%
   |                                                                            
-  |===================                                                   |  26%
-  |                                                                            
   |===================                                                   |  27%
   |                                                                            
   |===================                                                   |  28%
@@ -324,8 +322,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |=====================================================                 |  76%
   |                                                                            
-  |======================================================                |  76%
-  |                                                                            
   |======================================================                |  77%
   |                                                                            
   |======================================================                |  78%
@@ -356,8 +352,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |============================================================          |  86%
   |                                                                            
-  |=============================================================         |  86%
-  |                                                                            
   |=============================================================         |  87%
   |                                                                            
   |=============================================================         |  88%
@@ -379,8 +373,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |=================================================================     |  92%
   |                                                                            
   |=================================================================     |  93%
-  |                                                                            
-  |=================================================================     |  94%
   |                                                                            
   |==================================================================    |  94%
   |                                                                            
@@ -405,7 +397,7 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
 nyc2 &lt;- nyc %&gt;%
   filter(ZCTA5CE10 %in% dog_bite_raw$zipcode)
 
-nyc &lt;- janitor::clean_names(nyc2)
+nyc2 &lt;- janitor::clean_names(nyc2)
 
 head(dog_bite_raw)</code></pre>
 <pre><code>## # A tibble: 6 x 9
@@ -426,20 +418,20 @@ head(dog_bite_raw)</code></pre>
   theme_bw()</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <pre class="r"><code>glimpse(nyc)</code></pre>
-<pre><code>## Rows: 182
+<pre><code>## Rows: 1,794
 ## Columns: 12
-## $ statefp10  &lt;chr&gt; &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;,~
-## $ zcta5ce10  &lt;chr&gt; &quot;10464&quot;, &quot;10470&quot;, &quot;10455&quot;, &quot;10473&quot;, &quot;11234&quot;, &quot;11210&quot;, &quot;1121~
-## $ geoid10    &lt;chr&gt; &quot;3610464&quot;, &quot;3610470&quot;, &quot;3610455&quot;, &quot;3610473&quot;, &quot;3611234&quot;, &quot;361~
-## $ classfp10  &lt;chr&gt; &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;,~
-## $ mtfcc10    &lt;chr&gt; &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G635~
-## $ funcstat10 &lt;chr&gt; &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;,~
-## $ aland10    &lt;dbl&gt; 9070627, 3689950, 1844518, 5645604, 19547849, 4250381, 5641~
-## $ awater10   &lt;dbl&gt; 236605, 3918, 0, 13868, 2143727, 0, 54168, 91783, 30120, 11~
-## $ intptlat10 &lt;chr&gt; &quot;+40.8677868&quot;, &quot;+40.8895273&quot;, &quot;+40.8147100&quot;, &quot;+40.8186904&quot;,~
-## $ intptlon10 &lt;chr&gt; &quot;-073.7999204&quot;, &quot;-073.8726596&quot;, &quot;-073.9085917&quot;, &quot;-073.85847~
-## $ partflg10  &lt;chr&gt; &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;,~
-## $ geometry   &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-73.78619 4..., MULTIPOLYGON (~</code></pre>
+## $ STATEFP10  &lt;chr&gt; &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;, &quot;36&quot;,~
+## $ ZCTA5CE10  &lt;chr&gt; &quot;12205&quot;, &quot;12009&quot;, &quot;14804&quot;, &quot;14836&quot;, &quot;14536&quot;, &quot;10464&quot;, &quot;1047~
+## $ GEOID10    &lt;chr&gt; &quot;3612205&quot;, &quot;3612009&quot;, &quot;3614804&quot;, &quot;3614836&quot;, &quot;3614536&quot;, &quot;361~
+## $ CLASSFP10  &lt;chr&gt; &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;, &quot;B5&quot;,~
+## $ MTFCC10    &lt;chr&gt; &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G6350&quot;, &quot;G635~
+## $ FUNCSTAT10 &lt;chr&gt; &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;,~
+## $ ALAND10    &lt;dbl&gt; 40906445, 135241924, 144718714, 77612958, 47193482, 9070627~
+## $ AWATER10   &lt;dbl&gt; 243508, 2168637, 232123, 131305, 425175, 236605, 3918, 0, 1~
+## $ INTPTLAT10 &lt;chr&gt; &quot;+42.7187855&quot;, &quot;+42.6975663&quot;, &quot;+42.3172588&quot;, &quot;+42.5429182&quot;,~
+## $ INTPTLON10 &lt;chr&gt; &quot;-073.8292399&quot;, &quot;-074.0355422&quot;, &quot;-077.8479358&quot;, &quot;-077.87819~
+## $ PARTFLG10  &lt;chr&gt; &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;,~
+## $ geometry   &lt;MULTIPOLYGON [°]&gt; MULTIPOLYGON (((-73.87052 4..., MULTIPOLYGON (~</code></pre>
 <pre class="r"><code>glimpse(dog_bite_raw)</code></pre>
 <pre><code>## Rows: 9,843
 ## Columns: 9
@@ -456,7 +448,7 @@ head(dog_bite_raw)</code></pre>
 <div id="join-data-together" class="section level2">
 <h2>Join data together</h2>
 <pre class="r"><code># join to spatial data
-dog_full &lt;- nyc %&gt;%
+dog_full &lt;- nyc2 %&gt;%
   rename(zipcode = zcta5ce10) %&gt;%
   full_join(dog_bite_raw, by = c(&quot;zipcode&quot; = &quot;zipcode&quot;))
 

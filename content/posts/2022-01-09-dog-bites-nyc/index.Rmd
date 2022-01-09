@@ -3,6 +3,7 @@ title: Dog Bites NYC
 author: gregory_ut
 date: '2022-01-09'
 slug: []
+output: blogdown::html_page
 categories:
   - R
 tags:

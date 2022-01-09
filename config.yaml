@@ -19,7 +19,7 @@ menu:
 params:
   author: Gregory
   description: I like R and Python for data analytics.
-  avatar: C:\Users\grish\Desktop\gregory_ut\greg.jpg
+  avatar: "C:\Users\grish\Desktop\gregory_ut\greg.jpg"
   menu_item_separator: ' - '
   social:
     - icon: github

@@ -67,8 +67,6 @@ dog_bite_raw &lt;-
 </div>
 <div id="get-zip-code-data" class="section level2">
 <h2>Get zip-code data</h2>
-<pre class="r"><code># get nyc spatial boundaries zip codes
-nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
 <pre><code>## 
   |                                                                            
   |                                                                      |   0%
@@ -259,6 +257,8 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |=======================================                               |  56%
   |                                                                            
+  |========================================                              |  56%
+  |                                                                            
   |========================================                              |  57%
   |                                                                            
   |========================================                              |  58%
@@ -355,6 +355,8 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |============================================================          |  86%
   |                                                                            
+  |=============================================================         |  86%
+  |                                                                            
   |=============================================================         |  87%
   |                                                                            
   |=============================================================         |  88%
@@ -398,9 +400,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |======================================================================|  99%
   |                                                                            
   |======================================================================| 100%</code></pre>
-<pre class="r"><code># filter for zipcodes in dog bite dataframe
-nyc2 &lt;- nyc %&gt;%
-  filter(ZCTA5CE10 %in% dog_bite_raw$zipcode)</code></pre>
 </div>
 <div id="quick-plot" class="section level2">
 <h2>Quick plot</h2>

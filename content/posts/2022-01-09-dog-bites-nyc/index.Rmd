@@ -3,7 +3,6 @@ title: Dog Bites NYC
 author: gregory_ut
 date: '2022-01-09'
 slug: []
-output: blogdown::html_page
 categories:
   - R
 tags:
@@ -54,7 +53,7 @@ nyc <- tigris::zctas(year = 2010, state = "NY")
 nyc2 <- nyc %>%
   filter(ZCTA5CE10 %in% dog_bite_raw$zipcode)
 
-nyc <- janitor::clean_names(nyc2)
+nyc2 <- janitor::clean_names(nyc2)
 
 head(dog_bite_raw)
 
@@ -75,7 +74,7 @@ glimpse(dog_bite_raw)
 ## Join data together
 ```{r}
 # join to spatial data
-dog_full <- nyc %>%
+dog_full <- nyc2 %>%
   rename(zipcode = zcta5ce10) %>%
   full_join(dog_bite_raw, by = c("zipcode" = "zipcode"))
 

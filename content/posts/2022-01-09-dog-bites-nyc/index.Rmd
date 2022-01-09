@@ -3,7 +3,6 @@ title: Dog Bites NYC
 author: gregory_ut
 date: '2022-01-09'
 slug: []
-output: blogdown::html_page
 categories:
   - R
 tags:
@@ -22,13 +21,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ### you can get the data from here <https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg>
 
 ```{r}
-#p ka
 library(RSocrata)
 library(tidyverse)
 library(tigris)
 library(sf)
 library(here)
 library(tmap)
+library(rgdal)
 
 
 dog_bite_raw <- 
@@ -42,11 +41,14 @@ dog_bite_raw <-
 ```{r}
 dog_bite_raw %>%
   count(borough)
+
+dog_bite_raw %>%
+  count()
 ```
 
 
 ## Get zip-code data
-```{r, message=FALSE}
+```{r}
 # get nyc spatial boundaries zip codes
 nyc <- tigris::zctas(year = 2010, state = "NY")
 
@@ -60,9 +62,10 @@ nyc2 <- nyc %>%
 ```{r}
 nyc2 <- janitor::clean_names(nyc2)
 
-head(dog_bite_raw)
+head(dog_bite_raw)   
 
 
+# bar plot
 dog_bite_raw %>%
   group_by(borough) %>%
   summarise(n = n()) %>%

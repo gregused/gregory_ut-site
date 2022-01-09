@@ -49,7 +49,7 @@ dog_bite_raw %>%
 
 
 ## Get zip-code data
-```{r}
+```{r, warning=FALSE, message=FALSE}
 # get nyc spatial boundaries zip codes
 nyc <- tigris::zctas(year = 2010, state = "NY")
 

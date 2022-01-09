@@ -21,6 +21,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ### you can get the data from here <https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg>
 
 ```{r}
+#p ka
 library(RSocrata)
 library(tidyverse)
 library(tigris)

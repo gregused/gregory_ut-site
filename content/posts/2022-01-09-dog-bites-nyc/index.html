@@ -19,14 +19,13 @@ tags:
 <h2>Load packages and data</h2>
 <div id="you-can-get-the-data-from-here-httpsdata.cityofnewyork.ushealthdohmh-dog-bite-datarsgh-akpg" class="section level3">
 <h3>you can get the data from here <a href="https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg" class="uri">https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg</a></h3>
-<pre><code>## Warning: package &#39;RSocrata&#39; was built under R version 4.1.1</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.1</code></pre>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## Warning: package &#39;tigris&#39; was built under R version 4.1.1</code></pre>
-<pre><code>## Warning: package &#39;sf&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## Warning: package &#39;rgdal&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## Warning: package &#39;sp&#39; was built under R version 4.1.2</code></pre>
+<pre class="r"><code>library(RSocrata)
+library(tidyverse)
+library(tigris)
+library(sf)
+library(here)
+library(tmap)
+library(rgdal)</code></pre>
 <pre class="r"><code>dog_bite_raw &lt;- 
   read.socrata(&quot;https://data.cityofnewyork.us/resource/rsgh-akpg.csv&quot;) %&gt;%
   as_tibble() %&gt;%
@@ -146,8 +145,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |==================                                                    |  25%
   |                                                                            
   |==================                                                    |  26%
-  |                                                                            
-  |===================                                                   |  26%
   |                                                                            
   |===================                                                   |  27%
   |                                                                            
@@ -283,8 +280,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |==============================================                        |  66%
   |                                                                            
-  |===============================================                       |  66%
-  |                                                                            
   |===============================================                       |  67%
   |                                                                            
   |===============================================                       |  68%
@@ -314,8 +309,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |=====================================================                 |  75%
   |                                                                            
   |=====================================================                 |  76%
-  |                                                                            
-  |======================================================                |  76%
   |                                                                            
   |======================================================                |  77%
   |                                                                            
@@ -347,8 +340,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |============================================================          |  86%
   |                                                                            
-  |=============================================================         |  86%
-  |                                                                            
   |=============================================================         |  87%
   |                                                                            
   |=============================================================         |  88%
@@ -370,8 +361,6 @@ nyc &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |=================================================================     |  92%
   |                                                                            
   |=================================================================     |  93%
-  |                                                                            
-  |=================================================================     |  94%
   |                                                                            
   |==================================================================    |  94%
   |                                                                            

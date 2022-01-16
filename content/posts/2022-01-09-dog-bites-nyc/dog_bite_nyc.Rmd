@@ -1,0 +1,136 @@
+---
+title: Dog Bites NYC
+author: gregory_ut
+date: '2022-01-09'
+slug: []
+categories:
+  - R
+tags:
+  - R Markdown
+  - map
+  - plot
+  - ggplot2
+---
+
+
+## Load packages and data
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(RSocrata)
+library(tigris)
+library(sf)
+library(here)
+library(tmap)
+library(rgdal)
+```
+
+
+### you can get the data from here <https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg>
+
+```{r}
+dog_bite_raw <- 
+  read.socrata("https://data.cityofnewyork.us/resource/rsgh-akpg.csv") %>%
+  tibble() %>%
+  filter(borough %in% c("Brooklyn", "Manhattan", "Queens", "Bronx", "Staten Island"))
+
+glimpse(dog_bite_raw)
+```
+
+
+## Count how many dog bites in each borough.
+```{r}
+dog_bite_raw %>%
+  count(borough)
+
+# are they all unique bites?
+dog_bite_raw %>%
+  group_by(dateofbite) %>%
+  summarise(n_unique = n_distinct()) %>%
+  arrange(desc(n_unique))
+```
+
+
+## Get zip-code data
+```{r, warning=FALSE, message=FALSE, ech}
+# get nyc spatial boundaries zip codes
+ny <- tigris::zctas(year = 2010, state = "NY")
+
+# filter for zipcodes in dog bite dataframe
+nyc <- ny %>%
+  filter(ZCTA5CE10 %in% dog_bite_raw$zipcode) %>%
+  select(ZCTA5CE10)
+
+```
+
+## Quick plot
+```{r}
+
+nyc <- janitor::clean_names(nyc)
+
+head(dog_bite_raw)   
+head(nyc)
+
+# bar plot
+dog_bite_raw %>%
+  group_by(borough) %>%
+  summarise(n = n()) %>%
+  ggplot(aes(borough, n, fill = borough)) +
+  geom_col() +
+  scale_fill_viridis_d(option = "H") +
+  labs(title = "Count of Dog Bites by borough.",
+       fill = "Borough") +
+  theme(
+    panel.grid = element_blank(),
+    panel.background = element_blank(),
+    plot.title = element_text(size = 18, hjust = 0.5, face = 'bold', family = 'sans'),
+    legend.box.background = element_rect(colour = "black", size = 2)
+  )
+
+```
+
+
+## Join data together
+```{r}
+# join to spatial data
+# count bites in each zipcode
+
+dog_full <- nyc %>%
+  rename(zipcode = zcta5ce10) %>%
+  full_join(dog_bite_raw, by = ("zipcode")) %>%
+  mutate(uniqueid = as.character(uniqueid)) %>%
+  drop_na() %>%
+  group_by(zipcode) %>% 
+  summarise(bites = n())
+
+```
+
+## Create Maps
+```{r}
+dog_full %>%
+  ggplot(aes(fill = bites)) +
+  geom_sf(lwd = 0.3) +
+  scale_fill_viridis_c(option = "H") +
+  labs(title = "Dog Bites in NYC.",
+       caption = "Data: https://data.cityofnewyork.us/resource/rsgh-akpg.csv",
+       fill = "# Bites") +
+  theme_minimal() +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5, size = 18, face = "bold"))
+
+# similar version map with tmap
+tm_shape(dog_full) +
+  tm_fill("bites",
+          style = "quantile",
+          n = 5,
+          title = "Dog bites") +
+  tm_borders(col = "black",
+             lwd = 0.3) +
+  tm_layout(title = "Dog Bites in NYC.",
+            legend.outside = TRUE,
+            legend.outside.position = "left",
+            title.fontface = "bold")
+
+```

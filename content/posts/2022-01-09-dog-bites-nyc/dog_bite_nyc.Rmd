@@ -15,7 +15,7 @@ tags:
 
 ## Load packages and data
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.show = "static")
 library(tidyverse)
 library(RSocrata)
 library(tigris)

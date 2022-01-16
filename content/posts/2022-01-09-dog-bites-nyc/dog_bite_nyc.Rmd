@@ -120,6 +120,9 @@ dog_full %>%
         axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5, size = 18, face = "bold"))
 
+```
+
+
 # similar version map with tmap
 tm_shape(dog_full) +
   tm_fill("bites",

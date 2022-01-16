@@ -29,3 +29,11 @@ params:
       - icon: twitter
         name: Twitter
         url: https://twitter.com/gregory_ut
+        
+
+
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true

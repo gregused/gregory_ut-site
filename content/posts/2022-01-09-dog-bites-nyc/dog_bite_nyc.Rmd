@@ -38,16 +38,72 @@ glimpse(dog_bite_raw)
 ```
 
 
-## Count how many dog bites in each borough.
+## Count how many dog bites in each borough & plots
 ```{r}
 dog_bite_raw %>%
   count(borough)
 
-# are they all unique bites?
+# top dogs
 dog_bite_raw %>%
-  group_by(dateofbite) %>%
-  summarise(n_unique = n_distinct()) %>%
-  arrange(desc(n_unique))
+  mutate(
+    breed = case_when(
+      breed == "American Pit Bull Terrier/Pit Bull" ~ "Pit Bull",
+      breed == "American Pit Bull Mix / Pit Bull Mix" ~ "Pit Bull",
+      TRUE ~ breed
+    )
+  ) %>%
+  group_by(breed, gender) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  filter(
+    breed != "",
+    breed %in% c(
+      "Yorkshire Terrier",
+      "UNKNOWN",
+      "Shih Tzu",
+      "Rottweiler",
+      "Pit Bull",
+      "Mixed/Other",
+      "Maltese",
+      "Labrador Retriever",
+      "German Shepherd",
+      "Chihuahua",
+      "Bull dog"
+    )
+  ) %>%
+  ggplot(aes(breed, count, fill = gender)) +
+  geom_bar(position = "dodge", stat = "identity") +
+  theme_minimal() +
+  scale_fill_viridis_d(option = "C") +
+  labs(title = "Dog Bites by Breed and Gender.") +
+  theme(
+    plot.title = element_text(
+      hjust = 0.5,
+      size = 16,
+      face = "bold",
+      family = "sans"
+    ),
+    axis.text.x = element_text(
+      angle = 30,
+      vjust = .8,
+      hjust = 0.5
+    )
+  )
+
+
+dog_bite_raw %>%
+  filter(age != "") %>%
+  group_by(age) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  head(10) %>%
+  ggplot(aes(fct_reorder(age, -n), n)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Top 10 biters by age.",
+       x = "Age",
+       y = "Count #") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 16))
 ```
 
 

@@ -38,8 +38,8 @@ glimpse(dog_bite_raw)</code></pre>
 ## $ zipcode    &lt;chr&gt; &quot;11238&quot;, &quot;11249&quot;, NA, &quot;11221&quot;, &quot;11207&quot;, &quot;11209&quot;, &quot;11220&quot;, &quot;~</code></pre>
 </div>
 </div>
-<div id="count-how-many-dog-bites-in-each-borough." class="section level2">
-<h2>Count how many dog bites in each borough.</h2>
+<div id="count-how-many-dog-bites-in-each-borough-plots" class="section level2">
+<h2>Count how many dog bites in each borough &amp; plots</h2>
 <pre class="r"><code>dog_bite_raw %&gt;%
   count(borough)</code></pre>
 <pre><code>## # A tibble: 5 x 2
@@ -50,25 +50,68 @@ glimpse(dog_bite_raw)</code></pre>
 ## 3 Manhattan      2354
 ## 4 Queens         2520
 ## 5 Staten Island   931</code></pre>
-<pre class="r"><code># are they all unique bites?
+<pre class="r"><code># top dogs
 dog_bite_raw %&gt;%
-  group_by(dateofbite) %&gt;%
-  summarise(n_unique = n_distinct()) %&gt;%
-  arrange(desc(n_unique))</code></pre>
-<pre><code>## # A tibble: 1,095 x 2
-##    dateofbite          n_unique
-##    &lt;dttm&gt;                 &lt;int&gt;
-##  1 2015-01-01 00:00:00        0
-##  2 2015-01-02 00:00:00        0
-##  3 2015-01-03 00:00:00        0
-##  4 2015-01-04 00:00:00        0
-##  5 2015-01-05 00:00:00        0
-##  6 2015-01-06 00:00:00        0
-##  7 2015-01-07 00:00:00        0
-##  8 2015-01-08 00:00:00        0
-##  9 2015-01-09 00:00:00        0
-## 10 2015-01-10 00:00:00        0
-## # ... with 1,085 more rows</code></pre>
+  mutate(
+    breed = case_when(
+      breed == &quot;American Pit Bull Terrier/Pit Bull&quot; ~ &quot;Pit Bull&quot;,
+      breed == &quot;American Pit Bull Mix / Pit Bull Mix&quot; ~ &quot;Pit Bull&quot;,
+      TRUE ~ breed
+    )
+  ) %&gt;%
+  group_by(breed, gender) %&gt;%
+  summarise(count = n()) %&gt;%
+  arrange(desc(count)) %&gt;%
+  filter(
+    breed != &quot;&quot;,
+    breed %in% c(
+      &quot;Yorkshire Terrier&quot;,
+      &quot;UNKNOWN&quot;,
+      &quot;Shih Tzu&quot;,
+      &quot;Rottweiler&quot;,
+      &quot;Pit Bull&quot;,
+      &quot;Mixed/Other&quot;,
+      &quot;Maltese&quot;,
+      &quot;Labrador Retriever&quot;,
+      &quot;German Shepherd&quot;,
+      &quot;Chihuahua&quot;,
+      &quot;Bull dog&quot;
+    )
+  ) %&gt;%
+  ggplot(aes(breed, count, fill = gender)) +
+  geom_bar(position = &quot;dodge&quot;, stat = &quot;identity&quot;) +
+  theme_minimal() +
+  scale_fill_viridis_d(option = &quot;C&quot;) +
+  labs(title = &quot;Dog Bites by Breed and Gender.&quot;) +
+  theme(
+    plot.title = element_text(
+      hjust = 0.5,
+      size = 16,
+      face = &quot;bold&quot;,
+      family = &quot;sans&quot;
+    ),
+    axis.text.x = element_text(
+      angle = 30,
+      vjust = .8,
+      hjust = 0.5
+    )
+  )</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;breed&#39;. You can override using the `.groups` argument.</code></pre>
+<p><img src="/posts/2022-01-09-dog-bites-nyc/dog_bite_nyc_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>dog_bite_raw %&gt;%
+  filter(age != &quot;&quot;) %&gt;%
+  group_by(age) %&gt;%
+  summarise(n = n()) %&gt;%
+  arrange(desc(n)) %&gt;%
+  head(10) %&gt;%
+  ggplot(aes(fct_reorder(age, -n), n)) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = &quot;Top 10 biters by age.&quot;,
+       x = &quot;Age&quot;,
+       y = &quot;Count #&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 16))</code></pre>
+<p><img src="/posts/2022-01-09-dog-bites-nyc/dog_bite_nyc_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 </div>
 <div id="get-zip-code-data" class="section level2">
 <h2>Get zip-code data</h2>

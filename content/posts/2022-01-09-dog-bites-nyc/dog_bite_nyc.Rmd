@@ -54,7 +54,7 @@ dog_bite_raw %>%
 ## Get zip-code data
 ```{r, warning=FALSE, message=FALSE, ech}
 # get nyc spatial boundaries zip codes
-ny <- tigris::zctas(year = 2010, state = "NY", tigris_use_cache = TRUE)
+ny <- tigris::zctas(year = 2010, state = "NY")
 
 # filter for zipcodes in dog bite dataframe
 nyc <- ny %>%
@@ -123,6 +123,7 @@ dog_full %>%
 ```
 
 
+```{r}
 # similar version map with tmap
 tm_shape(dog_full) +
   tm_fill("bites",

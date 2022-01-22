@@ -17,6 +17,14 @@ tags:
 
 <div id="load-packages-and-data" class="section level2">
 <h2>Load packages and data</h2>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, fig.show = &quot;static&quot;)
+library(tidyverse)
+library(RSocrata)
+library(tigris)
+library(sf)
+library(here)
+library(tmap)
+library(rgdal)</code></pre>
 <div id="you-can-get-the-data-from-here-httpsdata.cityofnewyork.ushealthdohmh-dog-bite-datarsgh-akpg" class="section level3">
 <h3>you can get the data from here <a href="https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg" class="uri">https://data.cityofnewyork.us/Health/DOHMH-Dog-Bite-Data/rsgh-akpg</a></h3>
 <pre class="r"><code>dog_bite_raw &lt;- 
@@ -25,17 +33,17 @@ tags:
   filter(borough %in% c(&quot;Brooklyn&quot;, &quot;Manhattan&quot;, &quot;Queens&quot;, &quot;Bronx&quot;, &quot;Staten Island&quot;))
 
 glimpse(dog_bite_raw)</code></pre>
-<pre><code>## Rows: 9,843
+<pre><code>## Rows: 21,682
 ## Columns: 9
 ## $ uniqueid   &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, ~
-## $ dateofbite &lt;dttm&gt; 2015-01-02, 2015-01-02, 2015-01-02, 2015-01-01, 2015-01-03~
+## $ dateofbite &lt;dttm&gt; 2018-01-01, 2018-01-04, 2018-01-06, 2018-01-08, 2018-01-09~
 ## $ species    &lt;chr&gt; &quot;DOG&quot;, &quot;DOG&quot;, &quot;DOG&quot;, &quot;DOG&quot;, &quot;DOG&quot;, &quot;DOG&quot;, &quot;DOG&quot;, &quot;DOG&quot;, &quot;DO~
-## $ breed      &lt;chr&gt; &quot;Poodle, Standard&quot;, &quot;HUSKY&quot;, &quot;&quot;, &quot;American Pit Bull Terrier~
-## $ age        &lt;chr&gt; &quot;3&quot;, &quot;&quot;, &quot;&quot;, &quot;6&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;1&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;4&quot;, ~
-## $ gender     &lt;chr&gt; &quot;M&quot;, &quot;U&quot;, &quot;U&quot;, &quot;M&quot;, &quot;M&quot;, &quot;F&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;U&quot;, &quot;U&quot;, &quot;U&quot;,~
-## $ spayneuter &lt;chr&gt; &quot;true&quot;, &quot;false&quot;, &quot;false&quot;, &quot;false&quot;, &quot;false&quot;, &quot;false&quot;, &quot;false~
+## $ breed      &lt;chr&gt; &quot;UNKNOWN&quot;, &quot;UNKNOWN&quot;, &quot;Pit Bull&quot;, &quot;Mixed/Other&quot;, &quot;Pit Bull&quot;~
+## $ age        &lt;chr&gt; &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;4&quot;, &quot;&quot;, &quot;4Y&quot;, &quot;&quot;, &quot;&quot;, &quot;5Y&quot;, &quot;3Y&quot;, &quot;&quot;, &quot;7&quot;, &quot;6&quot;~
+## $ gender     &lt;chr&gt; &quot;U&quot;, &quot;U&quot;, &quot;U&quot;, &quot;M&quot;, &quot;U&quot;, &quot;M&quot;, &quot;U&quot;, &quot;U&quot;, &quot;M&quot;, &quot;F&quot;, &quot;U&quot;, &quot;M&quot;,~
+## $ spayneuter &lt;chr&gt; &quot;false&quot;, &quot;false&quot;, &quot;false&quot;, &quot;false&quot;, &quot;false&quot;, &quot;false&quot;, &quot;fals~
 ## $ borough    &lt;chr&gt; &quot;Brooklyn&quot;, &quot;Brooklyn&quot;, &quot;Brooklyn&quot;, &quot;Brooklyn&quot;, &quot;Brooklyn&quot;,~
-## $ zipcode    &lt;chr&gt; &quot;11238&quot;, &quot;11249&quot;, NA, &quot;11221&quot;, &quot;11207&quot;, &quot;11209&quot;, &quot;11220&quot;, &quot;~</code></pre>
+## $ zipcode    &lt;chr&gt; &quot;11220&quot;, NA, &quot;11224&quot;, &quot;11231&quot;, &quot;11224&quot;, &quot;11231&quot;, NA, &quot;11233~</code></pre>
 </div>
 </div>
 <div id="count-how-many-dog-bites-in-each-borough-plots" class="section level2">
@@ -45,11 +53,11 @@ glimpse(dog_bite_raw)</code></pre>
 <pre><code>## # A tibble: 5 x 2
 ##   borough           n
 ##   &lt;chr&gt;         &lt;int&gt;
-## 1 Bronx          1757
-## 2 Brooklyn       2281
-## 3 Manhattan      2354
-## 4 Queens         2520
-## 5 Staten Island   931</code></pre>
+## 1 Bronx          3782
+## 2 Brooklyn       4985
+## 3 Manhattan      5270
+## 4 Queens         5773
+## 5 Staten Island  1872</code></pre>
 <pre class="r"><code># top dogs
 dog_bite_raw %&gt;%
   mutate(
@@ -207,8 +215,6 @@ ny &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |==================                                                    |  26%
   |                                                                            
-  |===================                                                   |  26%
-  |                                                                            
   |===================                                                   |  27%
   |                                                                            
   |===================                                                   |  28%
@@ -240,8 +246,6 @@ ny &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |=========================                                             |  35%
   |                                                                            
   |=========================                                             |  36%
-  |                                                                            
-  |==========================                                            |  36%
   |                                                                            
   |==========================                                            |  37%
   |                                                                            
@@ -343,8 +347,6 @@ ny &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |==============================================                        |  66%
   |                                                                            
-  |===============================================                       |  66%
-  |                                                                            
   |===============================================                       |  67%
   |                                                                            
   |===============================================                       |  68%
@@ -374,8 +376,6 @@ ny &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |=====================================================                 |  75%
   |                                                                            
   |=====================================================                 |  76%
-  |                                                                            
-  |======================================================                |  76%
   |                                                                            
   |======================================================                |  77%
   |                                                                            
@@ -431,8 +431,6 @@ ny &lt;- tigris::zctas(year = 2010, state = &quot;NY&quot;)</code></pre>
   |                                                                            
   |=================================================================     |  93%
   |                                                                            
-  |=================================================================     |  94%
-  |                                                                            
   |==================================================================    |  94%
   |                                                                            
   |==================================================================    |  95%
@@ -465,12 +463,12 @@ head(dog_bite_raw)   </code></pre>
 <pre><code>## # A tibble: 6 x 9
 ##   uniqueid dateofbite          species breed     age   gender spayneuter borough
 ##      &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;  
-## 1        1 2015-01-02 00:00:00 DOG     &quot;Poodle,~ &quot;3&quot;   M      true       Brookl~
-## 2        2 2015-01-02 00:00:00 DOG     &quot;HUSKY&quot;   &quot;&quot;    U      false      Brookl~
-## 3        3 2015-01-02 00:00:00 DOG     &quot;&quot;        &quot;&quot;    U      false      Brookl~
-## 4        4 2015-01-01 00:00:00 DOG     &quot;America~ &quot;6&quot;   M      false      Brookl~
-## 5        5 2015-01-03 00:00:00 DOG     &quot;America~ &quot;1&quot;   M      false      Brookl~
-## 6        6 2015-01-05 00:00:00 DOG     &quot;America~ &quot;1&quot;   F      false      Brookl~
+## 1        1 2018-01-01 00:00:00 DOG     UNKNOWN   &quot;&quot;    U      false      Brookl~
+## 2        2 2018-01-04 00:00:00 DOG     UNKNOWN   &quot;&quot;    U      false      Brookl~
+## 3        3 2018-01-06 00:00:00 DOG     Pit Bull  &quot;&quot;    U      false      Brookl~
+## 4        4 2018-01-08 00:00:00 DOG     Mixed/Ot~ &quot;4&quot;   M      false      Brookl~
+## 5        5 2018-01-09 00:00:00 DOG     Pit Bull  &quot;&quot;    U      false      Brookl~
+## 6        6 2018-01-03 00:00:00 DOG     BASENJI   &quot;4Y&quot;  M      false      Brookl~
 ## # ... with 1 more variable: zipcode &lt;chr&gt;</code></pre>
 <pre class="r"><code>head(nyc)</code></pre>
 <pre><code>## Simple feature collection with 6 features and 1 field

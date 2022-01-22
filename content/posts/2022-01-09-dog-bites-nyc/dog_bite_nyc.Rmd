@@ -14,7 +14,7 @@ tags:
 
 
 ## Load packages and data
-```{r setup, include=FALSE}
+```{r setup, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.show = "static")
 library(tidyverse)
 library(RSocrata)
@@ -23,6 +23,7 @@ library(sf)
 library(here)
 library(tmap)
 library(rgdal)
+library(gt)
 ```
 
 
@@ -40,18 +41,58 @@ glimpse(dog_bite_raw)
 
 ## Count how many dog bites in each borough & plots
 ```{r}
+# how many borrough occurances are there?
 dog_bite_raw %>%
   count(borough)
 
-# top dogs
+# count NA's by column
 dog_bite_raw %>%
+  map_df(~sum(is.na(.)))
+
+
+
+## need to find good ReGeX expressions to group by....
+dog_bite <- dog_bite_raw %>%
+  filter(!age %in% c("Y RS", "3Q", "")) %>%
+  filter(!str_detect(age, "2018-0|2022"),
+         age != "") %>%
   mutate(
     breed = case_when(
       breed == "American Pit Bull Terrier/Pit Bull" ~ "Pit Bull",
       breed == "American Pit Bull Mix / Pit Bull Mix" ~ "Pit Bull",
       TRUE ~ breed
+    ),
+    age_bin = case_when(
+      str_detect(age, regex("^1$|MONS$|^[1-9]M$|MTHS|MOS|MTH", ignore_case = TRUE)) ~ "younging",
+      str_detect(age, regex("^[1-5]$|^[1-5]Y$|^[1-5] YRS", ignore_case = TRUE)) ~ "mid - young",
+      str_detect(age, regex("^[6-9]|^[6-9]\\sY$|^[6-9]", ignore_case = TRUE)) ~ "older - mature",
+      str_detect(age, regex("\\d{2}(.*){3}$", ignore_case = TRUE)) ~ "Old :(",
+      TRUE ~ "ERROR"
     )
-  ) %>%
+  )  %>%
+  filter(age_bin != "ERROR")
+
+
+
+dog_bite %>% count(age_bin)
+
+
+
+
+dog_bite %>%
+  count(age_bin) %>%
+  arrange(desc(n)) %>%
+  filter(age_bin != "ERROR") %>%
+  ggplot(aes(fct_reorder(age_bin, n), n, fill = age_bin)) +
+  geom_col() +
+  labs(title = "Age Group Bites.",
+       x = "Age Bin",
+       y = NULL) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 17))
+  
+
+dog_bite %>%
   group_by(breed, gender) %>%
   summarise(count = n()) %>%
   arrange(desc(count)) %>%
@@ -91,13 +132,24 @@ dog_bite_raw %>%
   )
 
 
+dog_bite %>%
+  group_by(age) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  filter(age != "",
+         n > 50) %>%
+  gt() 
+
+
+
+
 dog_bite_raw %>%
   filter(age != "") %>%
   group_by(age) %>%
   summarise(n = n()) %>%
   arrange(desc(n)) %>%
   head(10) %>%
-  ggplot(aes(fct_reorder(age, -n), n)) +
+  ggplot(aes(fct_reorder(age,-n), n)) +
   geom_col() +
   theme_minimal() +
   labs(title = "Top 10 biters by age.",

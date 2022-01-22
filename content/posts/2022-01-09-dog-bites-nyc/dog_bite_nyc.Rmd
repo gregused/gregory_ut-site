@@ -24,6 +24,7 @@ library(here)
 library(tmap)
 library(rgdal)
 library(gt)
+
 ```
 
 
@@ -214,8 +215,9 @@ dog_full <- nyc %>%
 ```
 
 ## Create Maps
-```{r}
+```{r, warning=FALSE}
 dog_full %>%
+  st_crop(c(xmin = -74.31436, ymin = 40.49593, xmax = -73.6, ymax = 41.0)) %>%
   ggplot(aes(fill = bites)) +
   geom_sf(lwd = 0.3) +
   scale_fill_viridis_c(option = "H") +
@@ -223,9 +225,9 @@ dog_full %>%
        caption = "Data: https://data.cityofnewyork.us/resource/rsgh-akpg.csv",
        fill = "# Bites") +
   theme_minimal() +
-  theme(panel.grid = element_blank(),
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
+  theme(#panel.grid = element_blank(),
+        #axis.text.x = element_blank(),
+        #axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5, size = 18, face = "bold"))
 
 ```
@@ -233,16 +235,25 @@ dog_full %>%
 
 ```{r}
 # similar version map with tmap
-tm_shape(dog_full) +
+dog_full %>%
+  st_crop(c(
+    xmin = -74.31436,
+    ymin = 40.49593,
+    xmax = -73.6,
+    ymax = 41.0
+  )) %>%
+  tm_shape() +
   tm_fill("bites",
           style = "quantile",
           n = 5,
           title = "Dog bites") +
   tm_borders(col = "black",
              lwd = 0.3) +
-  tm_layout(title = "Dog Bites in NYC.",
-            legend.outside = TRUE,
-            legend.outside.position = "left",
-            title.fontface = "bold")
+  tm_layout(
+    title = "Dog Bites in NYC.",
+    legend.outside = TRUE,
+    legend.outside.position = "left",
+    title.fontface = "bold"
+  )
 
 ```

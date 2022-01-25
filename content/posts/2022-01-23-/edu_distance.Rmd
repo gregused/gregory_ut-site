@@ -29,7 +29,7 @@ library(sf)
 ### Thank you by Kyle E. Walker for providing code and instructions [link](https://link.springer.com/article/10.1007/s40980-018-0042-7)
 
 
-# First 
+## First get latest American Community Survey Data.
 ```{r}
 
 ny_df <-
@@ -42,13 +42,14 @@ ny_df <-
     )
 ```
 
+## Get spatial file of core based statistical areas
 ```{r, results='hide'}
 # get CBSA shapefile
 cbsa <- tigris::core_based_statistical_areas(cb = TRUE) %>%
   select(GEOID, metro_name = NAME)
 ```
 
-
+## Spatial join ACS data with CBSA file
 ```{r}
 
 ny_sp <- ny_df %>%
@@ -56,7 +57,10 @@ ny_sp <- ny_df %>%
   filter(
     str_detect(metro_name, "New York-Newark-Jersey City"),
     !str_detect(NAME, "Suffolk|Rockland|Westchester|Putnam|Pike"))
+```
 
+## Create Location Quotient function and city hall coordinates
+```{r}
 loc_quot <- function(group, total) {
   num <- group / total
   denom <- sum(group, na.rm = TRUE) / sum(total, na.rm = TRUE)
@@ -69,7 +73,10 @@ city_hall <- c(-74.0061, 40.7128) %>%
   st_sfc(crs = st_crs(ny_sp)) %>%
   st_transform(4269)
 
+```
 
+## Take location quotient for every group and then create distance between each tract to city hall.
+```{r}
 ny_df <- ny_sp %>%
   group_by(variable) %>%
   mutate(lq = loc_quot(estimate, summary_est)) %>%
@@ -82,7 +89,7 @@ ny_df %>%
 
 ```
 
-
+## Finally plot!
 ```{r, warning=FALSE}
 
 ny_df %>%
@@ -111,7 +118,7 @@ ny_df %>%
 
 ```
 
-
+# Now some PURRR, for multiple cities, I am doing 2 but any number is possible, as long as the projection is right.
 ```{r, results = "hide"}
 
 state <- c("New York", "Pennsylvania")
@@ -131,7 +138,7 @@ acs_df <-
 glimpse(acs_df)
 ```
 
-
+## Filter out unwated geographies and grab state names. 
 ```{r}
 ny_ph_cbsa <- acs_df %>%
   st_join(cbsa, join = st_within) %>%
@@ -150,7 +157,7 @@ ny_ph_cbsa %>%
 
 ```
 
-
+## Get city hall coordinates for both cities and make it spatial. 
 ```{r, warning=FALSE}
 loc_quot <- function(group, total) {
   num <- group / total
@@ -173,8 +180,10 @@ ny_ph_cbsa %>%
   geom_sf(data = cent_business, color = "red") +
   theme_void()
 
+```
 
-
+## Loop through each city and apply location quotient function.
+```{r}
 states <- c("New York", "Pennsylvania")
 
 ny_ph_dist <- map_df(states, function(x){
@@ -191,7 +200,11 @@ ny_ph_dist <- map_df(states, function(x){
   return(metro_dist)
 })
 
+```
 
+
+## Plot !
+```{r}
 plot_df <- ny_ph_dist %>%
   group_by(state, variable) %>%
   mutate(lq = loc_quot(estimate, summary_est)) %>%

@@ -1,0 +1,228 @@
+---
+title: "Education and Distance."
+author: "gregory_ut"
+date: '2022-01-23'
+slug: []
+categories:
+- R
+- sf
+- ggplot2
+- dplyr
+tags:
+- ggplot2
+- map
+- R Markdown
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.show = "static")
+library(tidyverse)
+library(here)
+library(tidycensus)
+library(sf)
+```
+
+# This blog will show you how to create maps and calculate distance between spatial points.
+
+### Thank you by Kyle E. Walker for providing code and instructions [link](https://link.springer.com/article/10.1007/s40980-018-0042-7)
+
+
+# First 
+```{r}
+
+ny_df <-
+    get_acs(
+      geography = "tract",
+      variables = c(hs = "B15003_017", grad = "B15003_023"),
+      state = "NY",
+      summary_var = "B15003_001",
+      geometry = TRUE
+    )
+```
+
+```{r, results='hide'}
+# get CBSA shapefile
+cbsa <- tigris::core_based_statistical_areas(cb = TRUE) %>%
+  select(GEOID, metro_name = NAME)
+```
+
+
+```{r}
+
+ny_sp <- ny_df %>%
+  st_join(cbsa, join = st_within) %>%
+  filter(
+    str_detect(metro_name, "New York-Newark-Jersey City"),
+    !str_detect(NAME, "Suffolk|Rockland|Westchester|Putnam|Pike"))
+
+loc_quot <- function(group, total) {
+  num <- group / total
+  denom <- sum(group, na.rm = TRUE) / sum(total, na.rm = TRUE)
+  output <- num / denom
+  return(output)
+}
+
+city_hall <- c(-74.0061, 40.7128) %>%
+  st_point() %>%
+  st_sfc(crs = st_crs(ny_sp)) %>%
+  st_transform(4269)
+
+
+ny_df <- ny_sp %>%
+  group_by(variable) %>%
+  mutate(lq = loc_quot(estimate, summary_est)) %>%
+  ungroup() %>%
+  st_transform(4269) %>%
+  mutate(dist = as.numeric(st_distance(st_centroid(.), city_hall)))
+
+ny_df %>%
+  glimpse()
+
+```
+
+
+```{r, warning=FALSE}
+
+ny_df %>%
+  ggplot(aes(dist/1000, lq, color = variable)) +
+  geom_smooth(method = 'loess', span = 0.3) +
+  theme_minimal() +
+  labs(color = "Degree",
+       x = "Distance (km)",
+       y = "LQ",
+       title = "As Distance From City Hall Increases,\n % With Degrees Fluctuates.") +
+  scale_color_manual(
+    values = c('#1D9EF5', '#3FF894'),
+    labels = c("Graduate Degree", "High School Degree")
+  ) +
+  geom_hline(
+    yintercept = 1,
+    color = 'black',
+    linetype = 'dashed',
+    alpha = 0.5
+  ) +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(size = 17, face = 'bold', hjust = 0.5),
+        legend.position = 'bottom')
+
+
+
+```
+
+
+```{r, results = "hide"}
+
+state <- c("New York", "Pennsylvania")
+
+acs_df <-
+  state %>%
+  map_df(., function(x) {
+    get_acs(
+      geography = "tract",
+      variables = c(hs = "B15003_017", grad = "B15003_023"),
+      state = x,
+      summary_var = "B15003_001",
+      geometry = TRUE
+    )
+  })
+
+glimpse(acs_df)
+```
+
+
+```{r}
+ny_ph_cbsa <- acs_df %>%
+  st_join(cbsa, join = st_within) %>%
+  filter(
+    str_detect(metro_name, "New York-Newark-Jersey City|Philadelphia"),
+    !str_detect(NAME, "Suffolk|Rockland|Westchester|Putnam|Pike")) %>%
+  mutate(county = str_extract(NAME, regex("(\\w+) county, (\\w.*)", ignore_case = TRUE)),
+         state = str_extract(county, regex(", (\\w.*)")),
+         state = str_remove(state, ", ")) 
+  
+
+ny_ph_cbsa %>%
+  ggplot() +
+  geom_sf(lwd = 0.1) +
+  theme_void()
+
+```
+
+
+```{r, warning=FALSE}
+loc_quot <- function(group, total) {
+  num <- group / total
+  denom <- sum(group, na.rm = TRUE) / sum(total, na.rm = TRUE)
+  output <- num / denom
+  return(output)
+}
+
+
+city_halls <- tibble(long = c(-74.0061, -75.1635), lat = c(40.7128, 39.9528),
+                     state = c("New York", "Pennsylvania"))
+
+cent_business <- city_halls %>% 
+  st_as_sf(coords = c("long", "lat"), crs = 4269)
+
+# verify that city hall locations match
+ny_ph_cbsa %>%
+  ggplot() +
+  geom_sf(lwd = 0.1) +
+  geom_sf(data = cent_business, color = "red") +
+  theme_void()
+
+
+
+states <- c("New York", "Pennsylvania")
+
+ny_ph_dist <- map_df(states, function(x){
+  metro <- ny_ph_cbsa %>%
+    filter(state == x) %>%
+    st_transform(4269)
+  
+  hall <- cent_business %>% filter(state == x)
+  dist <- st_distance(st_centroid(metro), hall)
+  
+  mindist <- apply(dist, 1, min)
+  metro_dist <- metro %>%
+    mutate(dist_min = mindist) 
+  return(metro_dist)
+})
+
+
+plot_df <- ny_ph_dist %>%
+  group_by(state, variable) %>%
+  mutate(lq = loc_quot(estimate, summary_est)) %>%
+  ungroup()
+
+
+plot_df %>%
+  ggplot(aes(dist_min/1000, lq, color = variable)) +
+  geom_smooth(methods = "loess") +
+  facet_wrap(~state, scales = "free") +
+  theme_minimal() +
+  labs(color = "Degree",
+       x = "Distance (km)",
+       y = "LQ",
+       title = "As Distance From City Hall Increases,\n % With Degrees Fluctuates.") +
+  scale_color_manual(
+    values = c('#1D9EF5', '#3FF894'),
+    labels = c("Graduate Degree", "High School Degree")
+  ) +
+  geom_hline(
+    yintercept = 1,
+    color = 'black',
+    linetype = 'dashed',
+    alpha = 0.5
+  ) +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(size = 17, face = 'bold', hjust = 0.5),
+        legend.position = 'bottom')
+
+
+
+
+```
+

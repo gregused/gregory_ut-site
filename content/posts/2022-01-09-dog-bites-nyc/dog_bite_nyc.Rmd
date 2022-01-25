@@ -225,9 +225,9 @@ dog_full %>%
        caption = "Data: https://data.cityofnewyork.us/resource/rsgh-akpg.csv",
        fill = "# Bites") +
   theme_minimal() +
-  theme(#panel.grid = element_blank(),
-        #axis.text.x = element_blank(),
-        #axis.text.y = element_blank(),
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5, size = 18, face = "bold"))
 
 ```

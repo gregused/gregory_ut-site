@@ -213,7 +213,7 @@ plot_df <- ny_ph_dist %>%
 
 plot_df %>%
   ggplot(aes(dist_min/1000, lq, color = variable)) +
-  geom_smooth(methods = "loess") +
+  geom_smooth(methods = "loess", span = 0.3) +
   facet_wrap(~state, scales = "free") +
   theme_minimal() +
   labs(color = "Degree",

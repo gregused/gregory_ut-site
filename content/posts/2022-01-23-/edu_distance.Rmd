@@ -24,9 +24,9 @@ library(tidycensus)
 library(sf)
 ```
 
-# This blog will show you how to create maps and calculate distance between spatial points.
+# This blog will explore the relationship between distance from Central Business District and proportion of different groups by educational attainment status.
 
-### Thank you by Kyle E. Walker for providing code and instructions [link](https://link.springer.com/article/10.1007/s40980-018-0042-7)
+### Thank you by Kyle E. Walker for providing guiding code instructions. [link](https://link.springer.com/article/10.1007/s40980-018-0042-7)
 
 
 ## First get latest American Community Survey Data.

@@ -184,6 +184,7 @@ ny_ph_cbsa %>%
 
 ## Loop through each city and apply location quotient function.
 ```{r}
+
 states <- c("New York", "Pennsylvania")
 
 ny_ph_dist <- map_df(states, function(x){
@@ -194,7 +195,7 @@ ny_ph_dist <- map_df(states, function(x){
   hall <- cent_business %>% filter(state == x)
   dist <- st_distance(st_centroid(metro), hall)
   
-  mindist <- apply(dist, 1, min)
+  mindist <- map(dist,~min(.)) %>% unlist()
   metro_dist <- metro %>%
     mutate(dist_min = mindist) 
   return(metro_dist)

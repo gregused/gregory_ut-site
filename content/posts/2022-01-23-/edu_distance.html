@@ -25,13 +25,13 @@ tags:
 <div id="first-get-latest-american-community-survey-data." class="section level2">
 <h2>First get latest American Community Survey Data.</h2>
 <pre class="r"><code>ny_df &lt;-
-    get_acs(
-      geography = &quot;tract&quot;,
-      variables = c(hs = &quot;B15003_017&quot;, grad = &quot;B15003_023&quot;),
-      state = &quot;NY&quot;,
-      summary_var = &quot;B15003_001&quot;,
-      geometry = TRUE
-    )</code></pre>
+  get_acs(
+    geography = &quot;tract&quot;,
+    variables = c(hs = &quot;B15003_017&quot;, grad = &quot;B15003_023&quot;),
+    state = &quot;NY&quot;,
+    summary_var = &quot;B15003_001&quot;,
+    geometry = TRUE
+  )</code></pre>
 <pre><code>## Getting data from the 2015-2019 5-year ACS</code></pre>
 <pre><code>## Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</code></pre>
 <pre><code>## 
@@ -40,13 +40,11 @@ tags:
   |                                                                            
   |=                                                                     |   1%
   |                                                                            
-  |=                                                                     |   2%
+  |==                                                                    |   2%
   |                                                                            
   |==                                                                    |   3%
   |                                                                            
   |===                                                                   |   4%
-  |                                                                            
-  |===                                                                   |   5%
   |                                                                            
   |====                                                                  |   5%
   |                                                                            
@@ -54,27 +52,35 @@ tags:
   |                                                                            
   |=====                                                                 |   7%
   |                                                                            
+  |======                                                                |   8%
+  |                                                                            
+  |=======                                                               |   9%
+  |                                                                            
   |=======                                                               |  10%
   |                                                                            
   |========                                                              |  11%
   |                                                                            
-  |========                                                              |  12%
+  |=========                                                             |  12%
   |                                                                            
   |=========                                                             |  13%
   |                                                                            
   |==========                                                            |  14%
   |                                                                            
-  |==========                                                            |  15%
+  |===========                                                           |  15%
   |                                                                            
   |===========                                                           |  16%
   |                                                                            
   |============                                                          |  17%
   |                                                                            
+  |============                                                          |  18%
+  |                                                                            
   |=============                                                         |  18%
   |                                                                            
-  |==============                                                        |  19%
+  |=============                                                         |  19%
   |                                                                            
   |==============                                                        |  20%
+  |                                                                            
+  |==============                                                        |  21%
   |                                                                            
   |===============                                                       |  21%
   |                                                                            
@@ -86,6 +92,10 @@ tags:
   |                                                                            
   |=================                                                     |  24%
   |                                                                            
+  |=================                                                     |  25%
+  |                                                                            
+  |==================                                                    |  25%
+  |                                                                            
   |==================                                                    |  26%
   |                                                                            
   |===================                                                   |  27%
@@ -96,17 +106,21 @@ tags:
   |                                                                            
   |====================                                                  |  29%
   |                                                                            
-  |=====================                                                 |  30%
+  |=====================                                                 |  29%
   |                                                                            
-  |=====================                                                 |  31%
+  |=====================                                                 |  30%
   |                                                                            
   |======================                                                |  31%
   |                                                                            
   |======================                                                |  32%
   |                                                                            
+  |=======================                                               |  32%
+  |                                                                            
   |=======================                                               |  33%
   |                                                                            
   |========================                                              |  34%
+  |                                                                            
+  |========================                                              |  35%
   |                                                                            
   |=========================                                             |  35%
   |                                                                            
@@ -120,89 +134,59 @@ tags:
   |                                                                            
   |============================                                          |  39%
   |                                                                            
-  |============================                                          |  40%
-  |                                                                            
   |============================                                          |  41%
   |                                                                            
   |=============================                                         |  42%
   |                                                                            
-  |==============================                                        |  43%
+  |==============================                                        |  44%
   |                                                                            
-  |===============================                                       |  44%
-  |                                                                            
-  |================================                                      |  45%
+  |===============================                                       |  45%
   |                                                                            
   |================================                                      |  46%
   |                                                                            
-  |=================================                                     |  47%
-  |                                                                            
   |=================================                                     |  48%
-  |                                                                            
-  |==================================                                    |  48%
   |                                                                            
   |==================================                                    |  49%
   |                                                                            
-  |===================================                                   |  50%
-  |                                                                            
-  |====================================                                  |  51%
+  |===================================                                   |  51%
   |                                                                            
   |====================================                                  |  52%
   |                                                                            
   |=====================================                                 |  53%
   |                                                                            
-  |======================================                                |  54%
-  |                                                                            
-  |=======================================                               |  55%
+  |======================================                                |  55%
   |                                                                            
   |=======================================                               |  56%
   |                                                                            
-  |========================================                              |  56%
-  |                                                                            
-  |========================================                              |  57%
-  |                                                                            
-  |=========================================                             |  58%
+  |========================================                              |  58%
   |                                                                            
   |=========================================                             |  59%
   |                                                                            
   |==========================================                            |  60%
   |                                                                            
-  |===========================================                           |  61%
-  |                                                                            
   |===========================================                           |  62%
   |                                                                            
   |============================================                          |  63%
   |                                                                            
-  |=============================================                         |  64%
-  |                                                                            
-  |==============================================                        |  65%
+  |=============================================                         |  65%
   |                                                                            
   |==============================================                        |  66%
   |                                                                            
   |===============================================                       |  67%
   |                                                                            
-  |===============================================                       |  68%
-  |                                                                            
   |================================================                      |  69%
   |                                                                            
   |=================================================                     |  70%
   |                                                                            
-  |==================================================                    |  71%
-  |                                                                            
-  |===================================================                   |  72%
+  |==================================================                    |  72%
   |                                                                            
   |===================================================                   |  73%
   |                                                                            
   |====================================================                  |  74%
   |                                                                            
-  |=====================================================                 |  75%
-  |                                                                            
   |=====================================================                 |  76%
   |                                                                            
-  |======================================================                |  76%
-  |                                                                            
   |======================================================                |  77%
-  |                                                                            
-  |======================================================                |  78%
   |                                                                            
   |=======================================================               |  79%
   |                                                                            
@@ -210,17 +194,9 @@ tags:
   |                                                                            
   |=========================================================             |  81%
   |                                                                            
-  |=========================================================             |  82%
-  |                                                                            
-  |==========================================================            |  82%
-  |                                                                            
   |==========================================================            |  83%
   |                                                                            
   |===========================================================           |  84%
-  |                                                                            
-  |===========================================================           |  85%
-  |                                                                            
-  |============================================================          |  85%
   |                                                                            
   |============================================================          |  86%
   |                                                                            
@@ -228,13 +204,17 @@ tags:
   |                                                                            
   |=============================================================         |  88%
   |                                                                            
+  |==============================================================        |  88%
+  |                                                                            
   |==============================================================        |  89%
   |                                                                            
   |===============================================================       |  90%
   |                                                                            
+  |===============================================================       |  91%
+  |                                                                            
   |================================================================      |  91%
   |                                                                            
-  |=================================================================     |  92%
+  |================================================================      |  92%
   |                                                                            
   |=================================================================     |  93%
   |                                                                            
@@ -247,6 +227,8 @@ tags:
   |===================================================================   |  96%
   |                                                                            
   |====================================================================  |  97%
+  |                                                                            
+  |====================================================================  |  98%
   |                                                                            
   |===================================================================== |  98%
   |                                                                            
@@ -265,8 +247,8 @@ cbsa &lt;- tigris::core_based_statistical_areas(cb = TRUE) %&gt;%
 <pre class="r"><code>ny_sp &lt;- ny_df %&gt;%
   st_join(cbsa, join = st_within) %&gt;%
   filter(
-    str_detect(metro_name, &quot;New York-Newark-Jersey City&quot;),
-    !str_detect(NAME, &quot;Suffolk|Rockland|Westchester|Putnam|Pike&quot;))</code></pre>
+    str_detect(metro_name, &quot;New York-Newark-Jersey City&quot;),!str_detect(NAME, &quot;Suffolk|Rockland|Westchester|Putnam|Pike&quot;)
+  )</code></pre>
 </div>
 <div id="create-location-quotient-function-and-city-hall-coordinates" class="section level2">
 <h2>Create Location Quotient function and city hall coordinates</h2>
@@ -312,13 +294,15 @@ city_hall &lt;- c(-74.0061, 40.7128) %&gt;%
 <div id="finally-plot" class="section level2">
 <h2>Finally plot!</h2>
 <pre class="r"><code>ny_df %&gt;%
-  ggplot(aes(dist/1000, lq, color = variable)) +
+  ggplot(aes(dist / 1000, lq, color = variable)) +
   geom_smooth(method = &#39;loess&#39;, span = 0.3) +
   theme_minimal() +
-  labs(color = &quot;Degree&quot;,
-       x = &quot;Distance (km)&quot;,
-       y = &quot;LQ&quot;,
-       title = &quot;As Distance From City Hall Increases,\n % With Degrees Fluctuates.&quot;) +
+  labs(
+    color = &quot;Degree&quot;,
+    x = &quot;Distance (km)&quot;,
+    y = &quot;LQ&quot;,
+    title = &quot;As Distance From City Hall Increases,\n % With Degrees Fluctuates.&quot;
+  ) +
   scale_color_manual(
     values = c(&#39;#1D9EF5&#39;, &#39;#3FF894&#39;),
     labels = c(&quot;Graduate Degree&quot;, &quot;High School Degree&quot;)
@@ -329,9 +313,11 @@ city_hall &lt;- c(-74.0061, 40.7128) %&gt;%
     linetype = &#39;dashed&#39;,
     alpha = 0.5
   ) +
-  theme(panel.grid = element_blank(),
-        plot.title = element_text(size = 17, face = &#39;bold&#39;, hjust = 0.5),
-        legend.position = &#39;bottom&#39;)</code></pre>
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 17, face = &#39;bold&#39;, hjust = 0.5),
+    legend.position = &#39;bottom&#39;
+  )</code></pre>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="/posts/2022-01-23-/edu_distance_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
@@ -361,12 +347,14 @@ acs_df &lt;-
 <pre class="r"><code>ny_ph_cbsa &lt;- acs_df %&gt;%
   st_join(cbsa, join = st_within) %&gt;%
   filter(
-    str_detect(metro_name, &quot;New York-Newark-Jersey City|Philadelphia&quot;),
-    !str_detect(NAME, &quot;Suffolk|Rockland|Westchester|Putnam|Pike&quot;)) %&gt;%
-  mutate(county = str_extract(NAME, regex(&quot;(\\w+) county, (\\w.*)&quot;, ignore_case = TRUE)),
-         state = str_extract(county, regex(&quot;, (\\w.*)&quot;)),
-         state = str_remove(state, &quot;, &quot;)) 
-  
+    str_detect(metro_name, &quot;New York-Newark-Jersey City|Philadelphia&quot;),!str_detect(NAME, &quot;Suffolk|Rockland|Westchester|Putnam|Pike&quot;)
+  ) %&gt;%
+  mutate(
+    county = str_extract(NAME, regex(&quot;(\\w+) county, (\\w.*)&quot;, ignore_case = TRUE)),
+    state = str_extract(county, regex(&quot;, (\\w.*)&quot;)),
+    state = str_remove(state, &quot;, &quot;)
+  )
+
 
 ny_ph_cbsa %&gt;%
   ggplot() +
@@ -384,10 +372,14 @@ ny_ph_cbsa %&gt;%
 }
 
 
-city_halls &lt;- tibble(long = c(-74.0061, -75.1635), lat = c(40.7128, 39.9528),
-                     state = c(&quot;New York&quot;, &quot;Pennsylvania&quot;))
+city_halls &lt;-
+  tibble(
+    long = c(-74.0061,-75.1635),
+    lat = c(40.7128, 39.9528),
+    state = c(&quot;New York&quot;, &quot;Pennsylvania&quot;)
+  )
 
-cent_business &lt;- city_halls %&gt;% 
+cent_business &lt;- city_halls %&gt;%
   st_as_sf(coords = c(&quot;long&quot;, &quot;lat&quot;), crs = 4269)
 
 # verify that city hall locations match
@@ -395,6 +387,7 @@ ny_ph_cbsa %&gt;%
   ggplot() +
   geom_sf(lwd = 0.1) +
   geom_sf(data = cent_business, color = &quot;red&quot;) +
+  
   theme_void()</code></pre>
 <p><img src="/posts/2022-01-23-/edu_distance_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
@@ -402,7 +395,7 @@ ny_ph_cbsa %&gt;%
 <h2>Loop through each city and apply location quotient function.</h2>
 <pre class="r"><code>states &lt;- c(&quot;New York&quot;, &quot;Pennsylvania&quot;)
 
-ny_ph_dist &lt;- map_df(states, function(x){
+ny_ph_dist &lt;- map_df(states, function(x) {
   metro &lt;- ny_ph_cbsa %&gt;%
     filter(state == x) %&gt;%
     st_transform(4269)
@@ -410,9 +403,9 @@ ny_ph_dist &lt;- map_df(states, function(x){
   hall &lt;- cent_business %&gt;% filter(state == x)
   dist &lt;- st_distance(st_centroid(metro), hall)
   
-  mindist &lt;- map(dist,~min(.)) %&gt;% unlist()
+  mindist &lt;- map(dist,  ~ min(.)) %&gt;% unlist()
   metro_dist &lt;- metro %&gt;%
-    mutate(dist_min = mindist) 
+    mutate(dist_min = mindist)
   return(metro_dist)
 })</code></pre>
 <pre><code>## Warning in st_centroid.sf(metro): st_centroid assumes attributes are constant
@@ -430,14 +423,16 @@ ny_ph_dist &lt;- map_df(states, function(x){
 
 
 plot_df %&gt;%
-  ggplot(aes(dist_min/1000, lq, color = variable)) +
+  ggplot(aes(dist_min / 1000, lq, color = variable)) +
   geom_smooth(methods = &quot;loess&quot;, span = 0.3) +
-  facet_wrap(~state, scales = &quot;free&quot;) +
+  facet_wrap( ~ state, scales = &quot;free&quot;) +
   theme_minimal() +
-  labs(color = &quot;Degree&quot;,
-       x = &quot;Distance (km)&quot;,
-       y = &quot;LQ&quot;,
-       title = &quot;As Distance From City Hall Increases,\n % With Degrees Fluctuates.&quot;) +
+  labs(
+    color = &quot;Degree&quot;,
+    x = &quot;Distance (km)&quot;,
+    y = &quot;LQ&quot;,
+    title = &quot;As Distance From City Hall Increases,\n % With Degrees Fluctuates.&quot;
+  ) +
   scale_color_manual(
     values = c(&#39;#1D9EF5&#39;, &#39;#3FF894&#39;),
     labels = c(&quot;Graduate Degree&quot;, &quot;High School Degree&quot;)
@@ -448,9 +443,11 @@ plot_df %&gt;%
     linetype = &#39;dashed&#39;,
     alpha = 0.5
   ) +
-  theme(panel.grid = element_blank(),
-        plot.title = element_text(size = 17, face = &#39;bold&#39;, hjust = 0.5),
-        legend.position = &#39;bottom&#39;)</code></pre>
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 17, face = &#39;bold&#39;, hjust = 0.5),
+    legend.position = &#39;bottom&#39;
+  )</code></pre>
 <pre><code>## Warning: Ignoring unknown parameters: methods</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <pre><code>## Warning: Removed 106 rows containing non-finite values (stat_smooth).</code></pre>

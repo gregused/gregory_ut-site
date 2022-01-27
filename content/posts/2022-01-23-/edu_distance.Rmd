@@ -33,13 +33,13 @@ library(sf)
 ```{r}
 
 ny_df <-
-    get_acs(
-      geography = "tract",
-      variables = c(hs = "B15003_017", grad = "B15003_023"),
-      state = "NY",
-      summary_var = "B15003_001",
-      geometry = TRUE
-    )
+  get_acs(
+    geography = "tract",
+    variables = c(hs = "B15003_017", grad = "B15003_023"),
+    state = "NY",
+    summary_var = "B15003_001",
+    geometry = TRUE
+  )
 ```
 
 ## Get spatial file of core based statistical areas
@@ -55,8 +55,8 @@ cbsa <- tigris::core_based_statistical_areas(cb = TRUE) %>%
 ny_sp <- ny_df %>%
   st_join(cbsa, join = st_within) %>%
   filter(
-    str_detect(metro_name, "New York-Newark-Jersey City"),
-    !str_detect(NAME, "Suffolk|Rockland|Westchester|Putnam|Pike"))
+    str_detect(metro_name, "New York-Newark-Jersey City"),!str_detect(NAME, "Suffolk|Rockland|Westchester|Putnam|Pike")
+  )
 ```
 
 ## Create Location Quotient function and city hall coordinates
@@ -92,14 +92,17 @@ ny_df %>%
 ## Finally plot!
 ```{r, warning=FALSE}
 
+
 ny_df %>%
-  ggplot(aes(dist/1000, lq, color = variable)) +
+  ggplot(aes(dist / 1000, lq, color = variable)) +
   geom_smooth(method = 'loess', span = 0.3) +
   theme_minimal() +
-  labs(color = "Degree",
-       x = "Distance (km)",
-       y = "LQ",
-       title = "As Distance From City Hall Increases,\n % With Degrees Fluctuates.") +
+  labs(
+    color = "Degree",
+    x = "Distance (km)",
+    y = "LQ",
+    title = "As Distance From City Hall Increases,\n % With Degrees Fluctuates."
+  ) +
   scale_color_manual(
     values = c('#1D9EF5', '#3FF894'),
     labels = c("Graduate Degree", "High School Degree")
@@ -110,16 +113,17 @@ ny_df %>%
     linetype = 'dashed',
     alpha = 0.5
   ) +
-  theme(panel.grid = element_blank(),
-        plot.title = element_text(size = 17, face = 'bold', hjust = 0.5),
-        legend.position = 'bottom')
-
-
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 17, face = 'bold', hjust = 0.5),
+    legend.position = 'bottom'
+  )
 
 ```
 
 # Now some PURRR, for multiple cities, I am doing 2 but any number is possible, as long as the projection is right.
 ```{r, results = "hide"}
+
 
 state <- c("New York", "Pennsylvania")
 
@@ -143,12 +147,14 @@ glimpse(acs_df)
 ny_ph_cbsa <- acs_df %>%
   st_join(cbsa, join = st_within) %>%
   filter(
-    str_detect(metro_name, "New York-Newark-Jersey City|Philadelphia"),
-    !str_detect(NAME, "Suffolk|Rockland|Westchester|Putnam|Pike")) %>%
-  mutate(county = str_extract(NAME, regex("(\\w+) county, (\\w.*)", ignore_case = TRUE)),
-         state = str_extract(county, regex(", (\\w.*)")),
-         state = str_remove(state, ", ")) 
-  
+    str_detect(metro_name, "New York-Newark-Jersey City|Philadelphia"),!str_detect(NAME, "Suffolk|Rockland|Westchester|Putnam|Pike")
+  ) %>%
+  mutate(
+    county = str_extract(NAME, regex("(\\w+) county, (\\w.*)", ignore_case = TRUE)),
+    state = str_extract(county, regex(", (\\w.*)")),
+    state = str_remove(state, ", ")
+  )
+
 
 ny_ph_cbsa %>%
   ggplot() +
@@ -167,10 +173,14 @@ loc_quot <- function(group, total) {
 }
 
 
-city_halls <- tibble(long = c(-74.0061, -75.1635), lat = c(40.7128, 39.9528),
-                     state = c("New York", "Pennsylvania"))
+city_halls <-
+  tibble(
+    long = c(-74.0061,-75.1635),
+    lat = c(40.7128, 39.9528),
+    state = c("New York", "Pennsylvania")
+  )
 
-cent_business <- city_halls %>% 
+cent_business <- city_halls %>%
   st_as_sf(coords = c("long", "lat"), crs = 4269)
 
 # verify that city hall locations match
@@ -178,6 +188,7 @@ ny_ph_cbsa %>%
   ggplot() +
   geom_sf(lwd = 0.1) +
   geom_sf(data = cent_business, color = "red") +
+  
   theme_void()
 
 ```
@@ -185,9 +196,10 @@ ny_ph_cbsa %>%
 ## Loop through each city and apply location quotient function.
 ```{r}
 
+
 states <- c("New York", "Pennsylvania")
 
-ny_ph_dist <- map_df(states, function(x){
+ny_ph_dist <- map_df(states, function(x) {
   metro <- ny_ph_cbsa %>%
     filter(state == x) %>%
     st_transform(4269)
@@ -195,9 +207,9 @@ ny_ph_dist <- map_df(states, function(x){
   hall <- cent_business %>% filter(state == x)
   dist <- st_distance(st_centroid(metro), hall)
   
-  mindist <- map(dist,~min(.)) %>% unlist()
+  mindist <- map(dist,  ~ min(.)) %>% unlist()
   metro_dist <- metro %>%
-    mutate(dist_min = mindist) 
+    mutate(dist_min = mindist)
   return(metro_dist)
 })
 
@@ -213,14 +225,16 @@ plot_df <- ny_ph_dist %>%
 
 
 plot_df %>%
-  ggplot(aes(dist_min/1000, lq, color = variable)) +
+  ggplot(aes(dist_min / 1000, lq, color = variable)) +
   geom_smooth(methods = "loess", span = 0.3) +
-  facet_wrap(~state, scales = "free") +
+  facet_wrap( ~ state, scales = "free") +
   theme_minimal() +
-  labs(color = "Degree",
-       x = "Distance (km)",
-       y = "LQ",
-       title = "As Distance From City Hall Increases,\n % With Degrees Fluctuates.") +
+  labs(
+    color = "Degree",
+    x = "Distance (km)",
+    y = "LQ",
+    title = "As Distance From City Hall Increases,\n % With Degrees Fluctuates."
+  ) +
   scale_color_manual(
     values = c('#1D9EF5', '#3FF894'),
     labels = c("Graduate Degree", "High School Degree")
@@ -231,12 +245,11 @@ plot_df %>%
     linetype = 'dashed',
     alpha = 0.5
   ) +
-  theme(panel.grid = element_blank(),
-        plot.title = element_text(size = 17, face = 'bold', hjust = 0.5),
-        legend.position = 'bottom')
-
-
-
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(size = 17, face = 'bold', hjust = 0.5),
+    legend.position = 'bottom'
+  )
 
 ```
 

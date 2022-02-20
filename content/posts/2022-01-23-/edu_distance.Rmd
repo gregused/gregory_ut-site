@@ -61,7 +61,10 @@ ny_sp <- ny_df %>%
 
 ## Create Location Quotient function and city hall coordinates
 
-$$LQ = \frac{G_i / T_i}{G_m / T_m}$$
+
+
+$LQ = \frac{G_i / T_i}{G_m / T_m}$
+
 Where $i$ is a census tract, $m$ is the metro area, $G$ is group population and $T$ is the total population.
 
 ```{r}

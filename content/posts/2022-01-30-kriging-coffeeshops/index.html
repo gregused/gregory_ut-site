@@ -1,0 +1,530 @@
+---
+title: Kriging-IncomeNYC
+author: gregory_ut
+date: '2022-02-04'
+slug: []
+categories:
+  - R
+  - sf
+  - dplyr
+  - ggplot2
+tags: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="load-packages" class="section level3">
+<h3>Load Packages</h3>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.6     v dplyr   1.0.7
+## v tidyr   1.1.4     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.1.1</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(tidycensus)</code></pre>
+<pre><code>## Warning: package &#39;tidycensus&#39; was built under R version 4.1.1</code></pre>
+<pre class="r"><code>library(sf)</code></pre>
+<pre><code>## Warning: package &#39;sf&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Linking to GEOS 3.9.1, GDAL 3.2.1, PROJ 7.2.1; sf_use_s2() is TRUE</code></pre>
+<pre class="r"><code>library(gstat)</code></pre>
+<pre><code>## Warning: package &#39;gstat&#39; was built under R version 4.1.1</code></pre>
+<pre class="r"><code>library(sp)</code></pre>
+<pre><code>## Warning: package &#39;sp&#39; was built under R version 4.1.2</code></pre>
+<pre class="r"><code>library(stars)</code></pre>
+<pre><code>## Warning: package &#39;stars&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Loading required package: abind</code></pre>
+<pre class="r"><code>library(raster)</code></pre>
+<pre><code>## Warning: package &#39;raster&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;raster&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     select</code></pre>
+<pre class="r"><code>sf::sf_use_s2(FALSE)</code></pre>
+<pre><code>## Spherical geometry (s2) switched off</code></pre>
+<pre class="r"><code>theme_set(theme_minimal())</code></pre>
+</div>
+<div id="get-median-income-data-from-census-and-transform-it-to-spatial-points." class="section level3">
+<h3>Get median income data from Census and transform it to spatial points.</h3>
+<pre class="r"><code>inc &lt;- get_acs(geography = &quot;tract&quot;,
+               variables = &quot;B19013_001&quot;,
+               state = &quot;NY&quot;,
+               county = c(&quot;New York&quot;, &quot;Kings&quot;, &quot;Richmond&quot;, &quot;Queens&quot;, &quot;Bronx&quot;),
+               geometry = TRUE)</code></pre>
+<pre><code>## Getting data from the 2015-2019 5-year ACS</code></pre>
+<pre><code>## Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=                                                                     |   1%
+  |                                                                            
+  |=                                                                     |   2%
+  |                                                                            
+  |==                                                                    |   3%
+  |                                                                            
+  |===                                                                   |   4%
+  |                                                                            
+  |===                                                                   |   5%
+  |                                                                            
+  |====                                                                  |   5%
+  |                                                                            
+  |====                                                                  |   6%
+  |                                                                            
+  |=====                                                                 |   7%
+  |                                                                            
+  |======                                                                |   8%
+  |                                                                            
+  |======                                                                |   9%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |=======                                                               |  11%
+  |                                                                            
+  |========                                                              |  11%
+  |                                                                            
+  |========                                                              |  12%
+  |                                                                            
+  |=========                                                             |  13%
+  |                                                                            
+  |==========                                                            |  14%
+  |                                                                            
+  |==========                                                            |  15%
+  |                                                                            
+  |===========                                                           |  16%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=============                                                         |  18%
+  |                                                                            
+  |==============                                                        |  19%
+  |                                                                            
+  |==============                                                        |  20%
+  |                                                                            
+  |===============                                                       |  21%
+  |                                                                            
+  |===============                                                       |  22%
+  |                                                                            
+  |================                                                      |  22%
+  |                                                                            
+  |================                                                      |  23%
+  |                                                                            
+  |=================                                                     |  24%
+  |                                                                            
+  |==================                                                    |  25%
+  |                                                                            
+  |==================                                                    |  26%
+  |                                                                            
+  |====================                                                  |  28%
+  |                                                                            
+  |=====================                                                 |  30%
+  |                                                                            
+  |======================                                                |  32%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |=========================                                             |  36%
+  |                                                                            
+  |==========================                                            |  37%
+  |                                                                            
+  |===========================                                           |  39%
+  |                                                                            
+  |============================                                          |  39%
+  |                                                                            
+  |============================                                          |  40%
+  |                                                                            
+  |============================                                          |  41%
+  |                                                                            
+  |=============================                                         |  42%
+  |                                                                            
+  |==============================                                        |  43%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |================================                                      |  45%
+  |                                                                            
+  |================================                                      |  46%
+  |                                                                            
+  |=================================                                     |  47%
+  |                                                                            
+  |=================================                                     |  48%
+  |                                                                            
+  |==================================                                    |  48%
+  |                                                                            
+  |==================================                                    |  49%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |====================================                                  |  51%
+  |                                                                            
+  |====================================                                  |  52%
+  |                                                                            
+  |=====================================                                 |  53%
+  |                                                                            
+  |======================================                                |  54%
+  |                                                                            
+  |=======================================                               |  55%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |========================================                              |  56%
+  |                                                                            
+  |========================================                              |  57%
+  |                                                                            
+  |=========================================                             |  58%
+  |                                                                            
+  |=========================================                             |  59%
+  |                                                                            
+  |==========================================                            |  60%
+  |                                                                            
+  |===========================================                           |  61%
+  |                                                                            
+  |===========================================                           |  62%
+  |                                                                            
+  |============================================                          |  63%
+  |                                                                            
+  |=============================================                         |  64%
+  |                                                                            
+  |=============================================                         |  65%
+  |                                                                            
+  |==============================================                        |  65%
+  |                                                                            
+  |==============================================                        |  66%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |===============================================                       |  68%
+  |                                                                            
+  |================================================                      |  69%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |==================================================                    |  71%
+  |                                                                            
+  |===================================================                   |  72%
+  |                                                                            
+  |===================================================                   |  73%
+  |                                                                            
+  |====================================================                  |  74%
+  |                                                                            
+  |=====================================================                 |  75%
+  |                                                                            
+  |=====================================================                 |  76%
+  |                                                                            
+  |======================================================                |  76%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |======================================================                |  78%
+  |                                                                            
+  |=======================================================               |  79%
+  |                                                                            
+  |========================================================              |  80%
+  |                                                                            
+  |=========================================================             |  81%
+  |                                                                            
+  |=========================================================             |  82%
+  |                                                                            
+  |==========================================================            |  82%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |===========================================================           |  84%
+  |                                                                            
+  |===========================================================           |  85%
+  |                                                                            
+  |============================================================          |  85%
+  |                                                                            
+  |============================================================          |  86%
+  |                                                                            
+  |=============================================================         |  87%
+  |                                                                            
+  |=============================================================         |  88%
+  |                                                                            
+  |==============================================================        |  89%
+  |                                                                            
+  |===============================================================       |  90%
+  |                                                                            
+  |================================================================      |  91%
+  |                                                                            
+  |=================================================================     |  92%
+  |                                                                            
+  |=================================================================     |  93%
+  |                                                                            
+  |==================================================================    |  94%
+  |                                                                            
+  |==================================================================    |  95%
+  |                                                                            
+  |===================================================================   |  95%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |===================================================================== |  98%
+  |                                                                            
+  |===================================================================== |  99%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>inc %&gt;%
+  mutate(boro = case_when(str_detect(NAME, &quot;Kings&quot;) ~ &quot;Brooklyn&quot;,
+                          str_detect(NAME, &quot;New York County&quot;) ~ &quot;Manhattan&quot;,
+                          str_detect(NAME, &quot;Bronx&quot;) ~ &quot;Bronx&quot;,
+                          str_detect(NAME, &quot;Queens&quot;) ~ &quot;Queens&quot;,
+                          str_detect(NAME, &quot;Richmond&quot;) ~ &quot;Staten Island&quot;)) %&gt;%
+  ggplot(aes(estimate, color = boro)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  scale_x_continuous(labels = scales::dollar) +
+  labs(title = &quot;Income CDF by Borough.&quot;) +
+  theme(plot.title = element_text(hjust = 0.5, size = 20, face = &#39;bold&#39;))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="create-spatial-points-from-multiplogon-shp." class="section level3">
+<h3>Create spatial points from multiplogon shp.</h3>
+<pre class="r"><code># create spatial point df, with centroids as points.
+inc_c &lt;- inc %&gt;%
+  mutate(centr = st_centroid(.) %&gt;%
+           st_geometry(.)) %&gt;%
+  st_drop_geometry() %&gt;%
+  st_as_sf() %&gt;%
+  drop_na(estimate, moe) %&gt;%
+  cbind(st_coordinates(.)) %&gt;%
+  st_transform(32618)
+
+## Plot points
+inc_c %&gt;%
+  ggplot(aes(color = estimate, size = estimate)) +
+  geom_sf(alpha = 0.6) +
+  scale_color_gradient2() +
+  labs(title = &quot;Income Points.&quot;) +
+  theme(plot.title = element_text(
+    hjust = 0.5,
+    size = 18,
+    face = &#39;bold&#39;,
+    family = &quot;sans&quot;),
+  panel.grid = element_blank())</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># Count NA values by column
+map_chr(inc_c, ~sum(is.na(.)))</code></pre>
+<pre><code>##    GEOID     NAME variable estimate      moe        X        Y    centr 
+##      &quot;0&quot;      &quot;0&quot;      &quot;0&quot;      &quot;0&quot;      &quot;0&quot;      &quot;0&quot;      &quot;0&quot;      &quot;0&quot;</code></pre>
+</div>
+<div id="spatial-analysis-of-clustering." class="section level3">
+<h3>Spatial analysis of clustering.</h3>
+<pre class="r"><code># convert to sp format
+inc_sp &lt;- as(inc_c, &quot;Spatial&quot;)
+
+# variogram
+inc_var &lt;- gstat::variogram(estimate ~ 1, inc_sp)
+
+ggplot(tibble(inc_var), aes(dist, np)) +
+  geom_point(size = 4, color = &quot;#A95DC2&quot;) +
+  labs(title = &quot;Variogram&quot;) +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(hjust = 0.5,
+                                  face = &#39;bold&#39;,
+                                  size = 20))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># fit variogram
+plot(automap::autofitVariogram(estimate~1, as(inc_c, &quot;Spatial&quot;)))</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+</div>
+<div id="prepare-for-kriging" class="section level3">
+<h3>Prepare for Kriging</h3>
+<pre class="r"><code># create spatial grid for kriging
+grid_inc &lt;- inc_c %&gt;%
+  st_transform(32618) %&gt;%
+  st_make_grid(cellsize = c(100, 100), # 100m pixel size
+               what = &quot;centers&quot;) %&gt;%
+  st_as_sf() %&gt;%
+  cbind(., st_coordinates(.))
+
+grid_inc &lt;- as(grid_inc, &quot;Spatial&quot;)
+gridded(grid_inc) &lt;- TRUE
+grid_inc &lt;- as(grid_inc, &quot;SpatialPixels&quot;) # specifying what kind of grid
+plot(grid_inc, col = &#39;grey&#39;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="universal-kriging" class="section level3">
+<h3>Universal Kriging</h3>
+<pre class="r"><code># get variogram model statistics
+var_mod &lt;- automap::autofitVariogram(estimate ~ X + Y, inc_sp)$var_model
+var_mod</code></pre>
+<pre><code>##   model      psill    range kappa
+## 1   Nug  162306060    0.000   0.0
+## 2   Ste 1155085361 5257.962   0.5</code></pre>
+<pre class="r"><code># Kriging
+UK &lt;- krige(
+  estimate ~ coords.x1 + coords.x2,
+  inc_sp, 
+  grid_inc,         
+  model = var_mod
+  )</code></pre>
+<pre><code>## [using universal kriging]</code></pre>
+<pre class="r"><code>head(UK)</code></pre>
+<pre><code>##   var1.pred  var1.var
+## 1  86889.02 440457391
+## 2  86975.91 402153266
+## 3  87154.92 362737295
+## 4  87436.31 323393672
+## 5  87763.21 302084768
+## 6  88013.22 332650204</code></pre>
+</div>
+<div id="prepare-for-plotting" class="section level3">
+<h3>Prepare for plotting</h3>
+<pre class="r"><code># create boundary to which to clip
+bounds &lt;- st_union(inc)</code></pre>
+<pre><code>## although coordinates are longitude/latitude, st_union assumes that they are planar</code></pre>
+<pre class="r"><code>uk &lt;- as.data.frame(UK)
+names(uk)[1:3] &lt;- c(&quot;coord_x&quot;, &quot;coord_y&quot;, &quot;prediction&quot;)
+
+
+# erase water function
+st_erase &lt;- function(x, y) {
+  st_difference(x, st_union(y))
+}
+
+# get water data
+ny_water &lt;-
+  tigris::area_water(&quot;NY&quot;,
+                     c(&quot;Bronx&quot;, &quot;New York&quot;, &quot;Kings&quot;, &quot;Queens&quot;, &quot;Richmond&quot;),
+                     class = &quot;sf&quot;) </code></pre>
+<pre><code>## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |========================================                              |  56%
+  |                                                                            
+  |======================================================================| 100%
+## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |================================================                      |  68%
+  |                                                                            
+  |======================================================================| 100%
+## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=================                                                     |  24%
+  |                                                                            
+  |==================================                                    |  49%
+  |                                                                            
+  |======================================                                |  54%
+  |                                                                            
+  |=======================================================               |  79%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |======================================================================| 100%
+## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |========                                                              |  12%
+  |                                                                            
+  |==================                                                    |  26%
+  |                                                                            
+  |==========================                                            |  38%
+  |                                                                            
+  |=================================                                     |  47%
+  |                                                                            
+  |=========================================                             |  59%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |=====================================================                 |  76%
+  |                                                                            
+  |==============================================================        |  88%
+  |                                                                            
+  |==================================================================    |  94%
+  |                                                                            
+  |======================================================================| 100%
+## 
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |==============                                                        |  20%
+  |                                                                            
+  |============================                                          |  40%
+  |                                                                            
+  |=============================                                         |  42%
+  |                                                                            
+  |============================================                          |  62%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |====================================================================  |  98%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+<pre class="r"><code>inc &lt;-  inc %&gt;%
+  st_transform(32618)
+
+
+ggplot() +
+  geom_tile(data = uk, aes(coord_x, coord_y, fill = prediction)) +
+  geom_sf(data = inc, alpha = 0.0, lwd = 0.1, color = &#39;black&#39;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="convert-kriging-results-to-raster" class="section level3">
+<h3>Convert Kriging results to raster</h3>
+<pre class="r"><code>ras &lt;- raster(UK)
+
+ras &lt;- mask(ras, as(bounds %&gt;% 
+                      st_transform(32618),
+                    &quot;Spatial&quot;))
+
+plot(ras, main = &quot;Median Income&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="categorical-plot" class="section level3">
+<h3>Categorical Plot,</h3>
+<pre class="r"><code># convert to to spatial points dataFrame
+rasp &lt;- rasterToPoints(ras)
+rasp_df &lt;- data.frame(rasp)
+
+
+# covert to right CRS before spatial join
+rasp_sf &lt;- rasp_df %&gt;% 
+            st_as_sf(., coords = c(&quot;x&quot;, &quot;y&quot;), 
+                     crs = st_crs(4269))
+
+# spatial join to tracts shapefile
+inc_df &lt;- inc %&gt;%
+  st_transform(4269) %&gt;%
+  st_erase(ny_water) %&gt;%
+  st_join(rasp_sf %&gt;% drop_na(.),
+          join = st_within) %&gt;%
+  group_by(GEOID) %&gt;%
+  summarise(sum_var1 = sum(estimate))
+
+# make income categories and plot
+inc_df %&gt;%
+  mutate(
+    cat_inc = factor(case_when(
+      sum_var1 &gt; 150000 ~ &quot;151,000$ &amp; Abv.&quot;,
+      sum_var1 &lt;= 150000 &amp;
+        sum_var1 &gt; 95000 ~ &quot;95,000$ to 150000$&quot;,
+      sum_var1 &lt; 95000 &amp;
+        sum_var1 &gt; 70000 ~ &quot;70,000$ to 95,000$&quot;,
+      sum_var1 &lt; 70000 &amp; sum_var1 &gt; 40000 ~ &quot;Less than 70,000$&quot;,
+      sum_var1 &lt; 40000 ~ &quot;Less than 40,000$&quot;,
+      TRUE ~ NA_character_)
+  ),
+  cat_inc = fct_reorder(cat_inc, sum_var1)) %&gt;% 
+  ggplot(aes(fill = cat_inc)) +
+  geom_sf(lwd = 0.2) +
+  scale_fill_manual(values = c(&quot;#ffee99&quot;, &quot;#d4d94c&quot;, &quot;#77b46c&quot;, &quot;#3d8799&quot;, &quot;#2b57d9&quot;)) +
+  theme(panel.grid = element_blank())</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>

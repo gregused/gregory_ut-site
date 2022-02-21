@@ -140,7 +140,7 @@ UK <- krige(
 
 
 ### Prepare for plotting
-```{r}
+```{r,}
 # create boundary to which to clip
 bounds <- st_union(inc)
 
@@ -154,12 +154,20 @@ st_erase <- function(x, y) {
   st_difference(x, st_union(y))
 }
 
+
+```
+
+```{r, results='hide'}
 # get water data
 ny_water <-
   tigris::area_water("NY",
                      c("Bronx", "New York", "Kings", "Queens", "Richmond"),
                      class = "sf") 
 
+
+```
+
+```{r}
 inc <-  inc %>%
   st_transform(32618)
 

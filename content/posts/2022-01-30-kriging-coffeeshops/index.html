@@ -152,86 +152,12 @@ names(uk)[1:3] &lt;- c(&quot;coord_x&quot;, &quot;coord_y&quot;, &quot;predictio
 # erase water function
 st_erase &lt;- function(x, y) {
   st_difference(x, st_union(y))
-}
-
-# get water data
+}</code></pre>
+<pre class="r"><code># get water data
 ny_water &lt;-
   tigris::area_water(&quot;NY&quot;,
                      c(&quot;Bronx&quot;, &quot;New York&quot;, &quot;Kings&quot;, &quot;Queens&quot;, &quot;Richmond&quot;),
                      class = &quot;sf&quot;) </code></pre>
-<pre><code>## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |========================================                              |  56%
-  |                                                                            
-  |=============================================================         |  87%
-  |                                                                            
-  |======================================================================| 100%
-## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |===============================                                       |  44%
-  |                                                                            
-  |================================================                      |  68%
-  |                                                                            
-  |======================================================================| 100%
-## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |=================                                                     |  24%
-  |                                                                            
-  |======================================                                |  54%
-  |                                                                            
-  |=======================================================               |  79%
-  |                                                                            
-  |====================================================================  |  97%
-  |                                                                            
-  |======================================================================| 100%
-## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |========                                                              |  12%
-  |                                                                            
-  |================                                                      |  24%
-  |                                                                            
-  |==================                                                    |  26%
-  |                                                                            
-  |==========================                                            |  38%
-  |                                                                            
-  |=================================                                     |  47%
-  |                                                                            
-  |=========================================                             |  59%
-  |                                                                            
-  |=================================================                     |  70%
-  |                                                                            
-  |=====================================================                 |  76%
-  |                                                                            
-  |==============================================================        |  88%
-  |                                                                            
-  |==================================================================    |  94%
-  |                                                                            
-  |======================================================================| 100%
-## 
-  |                                                                            
-  |                                                                      |   0%
-  |                                                                            
-  |==============                                                        |  20%
-  |                                                                            
-  |============================                                          |  40%
-  |                                                                            
-  |=============================                                         |  42%
-  |                                                                            
-  |============================================                          |  62%
-  |                                                                            
-  |======================================================                |  77%
-  |                                                                            
-  |====================================================================  |  98%
-  |                                                                            
-  |======================================================================| 100%</code></pre>
 <pre class="r"><code>inc &lt;-  inc %&gt;%
   st_transform(32618)
 
@@ -239,7 +165,7 @@ ny_water &lt;-
 ggplot() +
   geom_tile(data = uk, aes(coord_x, coord_y, fill = prediction)) +
   geom_sf(data = inc, alpha = 0.0, lwd = 0.1, color = &#39;black&#39;)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="convert-kriging-results-to-raster" class="section level3">
 <h3>Convert Kriging results to raster</h3>
@@ -250,7 +176,7 @@ ras &lt;- mask(ras, as(bounds %&gt;%
                     &quot;Spatial&quot;))
 
 plot(ras, main = &quot;Median Income&quot;)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="categorical-plot" class="section level3">
 <h3>Categorical Plot,</h3>
@@ -291,5 +217,5 @@ inc_df %&gt;%
   geom_sf(lwd = 0.2) +
   scale_fill_manual(values = c(&quot;#ffee99&quot;, &quot;#d4d94c&quot;, &quot;#77b46c&quot;, &quot;#3d8799&quot;, &quot;#2b57d9&quot;)) +
   theme(panel.grid = element_blank())</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>

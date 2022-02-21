@@ -12,7 +12,7 @@ tags: []
 ---
 
 ### Load Packages
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 library(tidycensus)
 library(sf)
@@ -26,14 +26,17 @@ theme_set(theme_minimal())
 
 
 ### Get median income data from Census and transform it to spatial points.
-```{r, warning=FALSE}
+```{r, warning=FALSE, results='hide'}
 inc <- get_acs(geography = "tract",
                variables = "B19013_001",
                state = "NY",
                county = c("New York", "Kings", "Richmond", "Queens", "Bronx"),
                geometry = TRUE)
 
+```
 
+
+```{r, warning=FALSE, message=FALSE}
 inc %>%
   mutate(boro = case_when(str_detect(NAME, "Kings") ~ "Brooklyn",
                           str_detect(NAME, "New York County") ~ "Manhattan",
@@ -133,8 +136,6 @@ UK <- krige(
   grid_inc,         
   model = var_mod
   )
-
-head(UK)
 ```
 
 

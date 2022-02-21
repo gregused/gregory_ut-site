@@ -30,7 +30,7 @@ library(sf)
 
 
 ## First get latest American Community Survey Data.
-```{r}
+```{r, message=FALSE}
 
 ny_df <-
   get_acs(

@@ -22,15 +22,15 @@ menu:
 
 params:
   author: gregoryut
-  description: I like R, Python and SQL for data analytics.
+  description: I enjoy open source tools for data analytics.
   menu_item_separator: ' - '
   social:
       - icon: github
         name: Github
-        url: https://github.com/gregoryut
+        url: https://github.com/gregused
       - icon: twitter
         name: Twitter
-        url: https://twitter.com/gregory_ut
+        url: https://twitter.com/greg_used
         
 
 

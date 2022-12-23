@@ -35,6 +35,7 @@ library(DBI)
 
 
 First establish connection with the database.
+If the table is too long i will LIMIT it by 20 to make things fit.
 ```{r}
 
 con <- dbConnect(RSQLite::SQLite(), "C:\\Users\\grish\\Desktop\\sql-challenge\\my_db.db")
@@ -92,7 +93,8 @@ dbGetQuery(
   FROM continent_map AS cm)
           SELECT DISTINCT country_code, continent_code
           FROM cte WHERE dup_count == 1
-          ORDER BY country_code;"
+          ORDER BY country_code
+  LIMIT 20;"
 )
 
 ```
@@ -299,7 +301,8 @@ dbGetQuery(con, "
            FROM cdf
            LEFT JOIN countries ON cdf.country_name = countries.country_name
            WHERE running_total >= 70000.00 AND
-           row = 1;")
+           row = 1
+           LIMIT 100;")
 
 
 

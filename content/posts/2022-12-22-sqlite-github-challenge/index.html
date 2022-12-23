@@ -15,7 +15,8 @@ tags:
 <div id="all-material-came-be-found-here" class="section level3">
 <h3>All material came be found here:</h3>
 <p><a href="https://github.com/AlexanderConnelly/BrainTree_SQL_Coding_Challenge_Data_Analyst">link</a></p>
-<p>First establish connection with the database.</p>
+<p>First establish connection with the database.
+If the table is too long i will LIMIT it by 20 to make things fit.</p>
 <pre class="r"><code>con &lt;- dbConnect(RSQLite::SQLite(), &quot;C:\\Users\\grish\\Desktop\\sql-challenge\\my_db.db&quot;)
 
 dbListTables(con)</code></pre>
@@ -117,260 +118,30 @@ dbListTables(con)</code></pre>
   FROM continent_map AS cm)
           SELECT DISTINCT country_code, continent_code
           FROM cte WHERE dup_count == 1
-          ORDER BY country_code;&quot;
+          ORDER BY country_code
+  LIMIT 20;&quot;
 )</code></pre>
-<pre><code>##     country_code continent_code
-## 1            ABW             NA
-## 2            AFG             AS
-## 3            AGO             AF
-## 4            AIA             NA
-## 5            ALA             EU
-## 6            ALB             EU
-## 7            AND             EU
-## 8            ANT             NA
-## 9            ARE             AS
-## 10           ARG             SA
-## 11           ARM             EU
-## 12           ASM             OC
-## 13           ATA             AN
-## 14           ATF             AN
-## 15           ATG             NA
-## 16           AUS             OC
-## 17           AUT             EU
-## 18           AZE             EU
-## 19           BDI             AF
-## 20           BEL             EU
-## 21           BEN             AF
-## 22           BES             NA
-## 23           BFA             AF
-## 24           BGD             AS
-## 25           BGR             EU
-## 26           BHR             AS
-## 27           BHS             NA
-## 28           BIH             EU
-## 29           BLM             NA
-## 30           BLR             EU
-## 31           BLZ             NA
-## 32           BMU             NA
-## 33           BOL             SA
-## 34           BRA             SA
-## 35           BRB             NA
-## 36           BRN             AS
-## 37           BTN             AS
-## 38           BVT             AN
-## 39           BWA             AF
-## 40           CAF             AF
-## 41           CAN             NA
-## 42           CCK             AS
-## 43           CHE             EU
-## 44           CHL             SA
-## 45           CHN             AS
-## 46           CIV             AF
-## 47           CMR             AF
-## 48           COD             AF
-## 49           COG             AF
-## 50           COK             OC
-## 51           COL             SA
-## 52           COM             AF
-## 53           CPV             AF
-## 54           CRI             NA
-## 55           CUB             NA
-## 56           CUW             NA
-## 57           CXR             AS
-## 58           CYM             NA
-## 59           CYP             EU
-## 60           CZE             EU
-## 61           DEU             EU
-## 62           DJI             AF
-## 63           DMA             NA
-## 64           DNK             EU
-## 65           DOM             NA
-## 66           DZA             AF
-## 67           ECU             SA
-## 68           EGY             AF
-## 69           ERI             AF
-## 70           ESH             AF
-## 71           ESP             EU
-## 72           EST             EU
-## 73           ETH             AF
-## 74           FIN             EU
-## 75           FJI             OC
-## 76           FLK             SA
-## 77           FRA             EU
-## 78           FRO             EU
-## 79           FSM             OC
-## 80           GAB             AF
-## 81           GBR             EU
-## 82           GEO             EU
-## 83           GGY             EU
-## 84           GHA             AF
-## 85           GIB             EU
-## 86           GIN             AF
-## 87           GLP             NA
-## 88           GMB             AF
-## 89           GNB             AF
-## 90           GNQ             AF
-## 91           GRC             EU
-## 92           GRD             NA
-## 93           GRL             NA
-## 94           GTM             NA
-## 95           GUF             SA
-## 96           GUM             OC
-## 97           GUY             SA
-## 98           HKG             AS
-## 99           HMD             AN
-## 100          HND             NA
-## 101          HRV             EU
-## 102          HTI             NA
-## 103          HUN             EU
-## 104          IDN             AS
-## 105          IMN             EU
-## 106          IND             AS
-## 107          IOT             AS
-## 108          IRL             EU
-## 109          IRN             AS
-## 110          IRQ             AS
-## 111          ISL             EU
-## 112          ISR             AS
-## 113          ITA             EU
-## 114          JAM             NA
-## 115          JEY             EU
-## 116          JOR             AS
-## 117          JPN             AS
-## 118          KAZ             EU
-## 119          KEN             AF
-## 120          KGZ             AS
-## 121          KHM             AS
-## 122          KIR             OC
-## 123          KNA             NA
-## 124          KOR             AS
-## 125          KWT             AS
-## 126          LAO             AS
-## 127          LBN             AS
-## 128          LBR             AF
-## 129          LBY             AF
-## 130          LCA             NA
-## 131          LIE             EU
-## 132          LKA             AS
-## 133          LSO             AF
-## 134          LTU             EU
-## 135          LUX             EU
-## 136          LVA             EU
-## 137          MAC             AS
-## 138          MAF             NA
-## 139          MAR             AF
-## 140          MCO             EU
-## 141          MDA             EU
-## 142          MDG             AF
-## 143          MDV             AS
-## 144          MEX             NA
-## 145          MHL             OC
-## 146          MKD             EU
-## 147          MLI             AF
-## 148          MLT             EU
-## 149          MMR             AS
-## 150          MNE             EU
-## 151          MNG             AS
-## 152          MNP             OC
-## 153          MOZ             AF
-## 154          MRT             AF
-## 155          MSR             NA
-## 156          MTQ             NA
-## 157          MUS             AF
-## 158          MWI             AF
-## 159          MYS             AS
-## 160          MYT             AF
-## 161           NA             OC
-## 162          NAM             AF
-## 163          NCL             OC
-## 164          NER             AF
-## 165          NFK             OC
-## 166          NGA             AF
-## 167          NIC             NA
-## 168          NIU             OC
-## 169          NLD             EU
-## 170          NOR             EU
-## 171          NPL             AS
-## 172          NRU             OC
-## 173          NZL             OC
-## 174          OMN             AS
-## 175          PAK             AS
-## 176          PAN             NA
-## 177          PCN             OC
-## 178          PER             SA
-## 179          PHL             AS
-## 180          PLW             OC
-## 181          PNG             OC
-## 182          POL             EU
-## 183          PRI             NA
-## 184          PRK             AS
-## 185          PRT             EU
-## 186          PRY             SA
-## 187          PSE             AS
-## 188          PYF             OC
-## 189          QAT             AS
-## 190          REU             AF
-## 191          ROU             EU
-## 192          RUS             EU
-## 193          RWA             AF
-## 194          SAU             AS
-## 195          SDN             AF
-## 196          SEN             AF
-## 197          SGP             AS
-## 198          SGS             AN
-## 199          SHN             AF
-## 200          SJM             EU
-## 201          SLB             OC
-## 202          SLE             AF
-## 203          SLV             NA
-## 204          SMR             EU
-## 205          SOM             AF
-## 206          SPM             NA
-## 207          SRB             EU
-## 208          SSD             AF
-## 209          STP             AF
-## 210          SUR             SA
-## 211          SVK             EU
-## 212          SVN             EU
-## 213          SWE             EU
-## 214          SWZ             AF
-## 215          SXM             NA
-## 216          SYC             AF
-## 217          SYR             AS
-## 218          TCA             NA
-## 219          TCD             AF
-## 220          TGO             AF
-## 221          THA             AS
-## 222          TJK             AS
-## 223          TKL             OC
-## 224          TKM             AS
-## 225          TLS             AS
-## 226          TON             OC
-## 227          TTO             NA
-## 228          TUN             AF
-## 229          TUR             EU
-## 230          TUV             OC
-## 231          TWN             AS
-## 232          TZA             AF
-## 233          UGA             AF
-## 234          UKR             EU
-## 235          UMI             OC
-## 236          URY             SA
-## 237          USA             NA
-## 238          UZB             AS
-## 239          VAT             EU
-## 240          VCT             NA
-## 241          VEN             SA
-## 242          VGB             NA
-## 243          VIR             NA
-## 244          VNM             AS
-## 245          VUT             OC
-## 246          WLF             OC
-## 247          WSM             OC
-## 248          YEM             AS
-## 249          ZAF             AF
-## 250          ZMB             AF
-## 251          ZWE             AF</code></pre>
+<pre><code>##    country_code continent_code
+## 1           ABW             NA
+## 2           AFG             AS
+## 3           AGO             AF
+## 4           AIA             NA
+## 5           ALA             EU
+## 6           ALB             EU
+## 7           AND             EU
+## 8           ANT             NA
+## 9           ARE             AS
+## 10          ARG             SA
+## 11          ARM             EU
+## 12          ASM             OC
+## 13          ATA             AN
+## 14          ATF             AN
+## 15          ATG             NA
+## 16          AUS             OC
+## 17          AUT             EU
+## 18          AZE             EU
+## 19          BDI             AF
+## 20          BEL             EU</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>List the countries ranked 10-12 in each continent by the percent of year-over-year growth descending from 2011 to 2012.</li>
 </ol>
@@ -592,206 +363,109 @@ running_total</p>
            FROM cdf
            LEFT JOIN countries ON cdf.country_name = countries.country_name
            WHERE running_total &gt;= 70000.00 AND
-           row = 1;&quot;)</code></pre>
-<pre><code>##     continent_name country_code                   country_name gdp_per_capita
-## 1           Africa          DZA                        Algeria      2549.9572
-## 2           Africa          AGO                         Angola      1229.3430
-## 3           Africa          ARM                        Armenia      1182.0974
-## 4           Africa          BEN                          Benin       511.2930
-## 5           Africa          BWA                       Botswana      4829.5161
-## 6           Africa          BFA                   Burkina Faso       371.2180
-## 7           Africa          BDI                        Burundi       121.8593
-## 8           Africa          CPV                     Cabo Verde      2159.2323
-## 9           Africa          CMR                       Cameroon       892.5257
-## 10          Africa          CAF       Central African Republic       326.1973
-## 11          Africa          TCD                           Chad       456.7944
-## 12          Africa          COM                        Comoros       619.1105
-## 13          Africa          COD               Congo, Dem. Rep.       124.0497
-## 14          Africa          COG                    Congo, Rep.      1347.8709
-## 15          Africa          CIV                  Cote d&#39;Ivoire       902.9864
-## 16          Africa          DJI                       Djibouti       869.8002
-## 17          Africa          EGY               Egypt, Arab Rep.      1116.9252
-## 18          Africa          GNQ              Equatorial Guinea      8943.6763
-## 19          Africa          ERI                        Eritrea       226.2899
-## 20          Africa          ETH                       Ethiopia       134.2796
-## 21          Africa          GAB                          Gabon      5328.4852
-## 22          Africa          GMB                    Gambia, The       415.8140
-## 23          Africa          GHA                          Ghana       426.2635
-## 24          Africa          GIN                         Guinea       287.9230
-## 25          Africa          GNB                  Guinea-Bissau       375.7946
-## 26          Africa          KEN                          Kenya       462.0498
-## 27          Africa          LSO                        Lesotho       645.4935
-## 28          Africa          LBR                        Liberia       146.6412
-## 29          Africa          LBY                          Libya      6062.2145
-## 30          Africa          MDG                     Madagascar       245.6705
-## 31          Africa          MWI                         Malawi       208.8558
-## 32          Africa          MLI                           Mali       421.1704
-## 33          Africa          MRT                     Mauritania       600.0623
-## 34          Africa          MUS                      Mauritius      5054.3181
-## 35          Africa          MAR                        Morocco      1881.9647
-## 36          Africa          MOZ                     Mozambique       278.7827
-## 37          Africa          NAM                        Namibia      3298.0107
-## 38          Africa          NER                          Niger       240.2174
-## 39          Africa          NGA                        Nigeria       645.9257
-## 40          Africa          RWA                         Rwanda       225.7514
-## 41          Africa          STP          Sao Tome and Principe       707.7886
-## 42          Africa          SEN                        Senegal       732.2812
-## 43          Africa          SYC                     Seychelles      9707.2654
-## 44          Africa          SLE                   Sierra Leone       290.4135
-## 45          Africa          ZAF                   South Africa      4659.6234
-## 46          Africa          SSD                    South Sudan       943.0433
-## 47          Africa          SDN                          Sudan       557.2210
-## 48          Africa          SWZ                      Swaziland      2211.0919
-## 49          Africa          TZA                       Tanzania       349.6209
-## 50          Africa          TGO                           Togo       358.8603
-## 51          Africa          TUN                        Tunisia      3139.5291
-## 52          Africa          UGA                         Uganda       285.9642
-## 53          Africa          ZMB                         Zambia       486.7424
-## 54          Africa          ZWE                       Zimbabwe       345.4074
-## 55            Asia          AFG                    Afghanistan       220.0563
-## 56            Asia          AZE                     Azerbaijan      1045.0264
-## 57            Asia          BHR                        Bahrain     16027.3448
-## 58            Asia          BGD                     Bangladesh       400.4725
-## 59            Asia          BTN                         Bhutan      1108.5183
-## 60            Asia          BRN              Brunei Darussalam     21819.2867
-## 61            Asia          KHM                       Cambodia       405.9378
-## 62            Asia          CHN                          China      1490.3801
-## 63            Asia          CYP                         Cyprus     21380.9031
-## 64            Asia          GEO                        Georgia      1186.8730
-## 65            Asia          HKG           Hong Kong SAR, China     24928.1004
-## 66            Asia          IND                          India       649.7106
-## 67            Asia          IDN                      Indonesia      1160.6149
-## 68            Asia          IRN             Iran, Islamic Rep.      2353.9310
-## 69            Asia          IRQ                           Iraq      1373.1926
-## 70            Asia          ISR                         Israel     18588.8050
-## 71            Asia          JPN                          Japan     34094.8871
-## 72            Asia          JOR                         Jordan      2156.4398
-## 73            Asia          KAZ                     Kazakhstan      2874.2883
-## 74            Asia          KOR                    Korea, Rep.     15028.8103
-## 75            Asia          KWT                         Kuwait     27061.8858
-## 76            Asia          KGZ                Kyrgyz Republic       433.2351
-## 77            Asia          LAO                        Lao PDR       415.2223
-## 78            Asia          LBN                        Lebanon      5483.1795
-## 79            Asia          MAC               Macao SAR, China     22371.6137
-## 80            Asia          MYS                       Malaysia      4918.1667
-## 81            Asia          MDV                       Maldives      3335.1950
-## 82            Asia          MNG                       Mongolia       798.0244
-## 83            Asia          NPL                          Nepal       291.8690
-## 84            Asia          OMN                           Oman     10013.6332
-## 85            Asia          PAK                       Pakistan       631.4978
-## 86            Asia          PHL                    Philippines      1084.7655
-## 87            Asia          QAT                          Qatar     44051.6573
-## 88            Asia          RUS             Russian Federation      4108.5623
-## 89            Asia          SAU                   Saudi Arabia     10853.6275
-## 90            Asia          SGP                      Singapore     27047.1400
-## 91            Asia          LKA                      Sri Lanka      1063.1606
-## 92            Asia          SYR           Syrian Arab Republic      1419.2642
-## 93            Asia          TJK                     Tajikistan       311.5502
-## 94            Asia          THA                       Thailand      2478.8176
-## 95            Asia          TLS                    Timor-Leste       456.0156
-## 96            Asia          TUR                         Turkey      5866.7447
-## 97            Asia          TKM                   Turkmenistan      1455.9361
-## 98            Asia          ARE           United Arab Emirates     33012.8151
-## 99            Asia          UZB                     Uzbekistan       465.1199
-## 100           Asia          VNM                        Vietnam       606.8947
-## 101           Asia          PSE             West Bank and Gaza      1114.3926
-## 102           Asia          YEM                    Yemen, Rep.       707.3735
-## 103         Europe          ALB                        Albania      2320.8923
-## 104         Europe          AND                        Andorra     29372.1667
-## 105         Europe          AUT                        Austria     35662.2118
-## 106         Europe          BLR                        Belarus      2378.3749
-## 107         Europe          BEL                        Belgium     34706.6939
-## 108         Europe          BIH         Bosnia and Herzegovina      2578.7381
-## 109         Europe          BGR                       Bulgaria      3249.2874
-## 110         Europe          HRV                        Croatia      9237.1162
-## 111         Europe          CZE                 Czech Republic     11177.3604
-## 112         Europe          DNK                        Denmark     45282.0680
-## 113         Europe          EST                        Estonia      8871.7102
-## 114         Europe          FRO                 Faeroe Islands     34520.8874
-## 115         Europe          FIN                        Finland     36162.6560
-## 116         Europe          FRA                         France     32784.8336
-## 117         Europe          DEU                        Germany     33040.0514
-## 118         Europe          GRC                         Greece     20607.1761
-## 119         Europe          HUN                        Hungary     10084.5218
-## 120         Europe          ISL                        Iceland     38039.2996
-## 121         Europe          IRL                        Ireland     45766.4169
-## 122         Europe          IMN                    Isle of Man     34624.4867
-## 123         Europe          ITA                          Italy     29832.6129
-## 124         Europe          LVA                         Latvia      6080.7900
-## 125         Europe          LIE                  Liechtenstein    100286.6675
-## 126         Europe          LTU                      Lithuania      6677.8331
-## 127         Europe          LUX                     Luxembourg     74388.7086
-## 128         Europe          MKD                 Macedonia, FYR      2643.8026
-## 129         Europe          MLT                          Malta     14064.2296
-## 130         Europe          MDA                        Moldova       720.9409
-## 131         Europe          MCO                         Monaco    123263.6132
-## 132         Europe          MNE                     Montenegro      3372.9571
-## 133         Europe          NLD                    Netherlands     37458.4329
-## 134         Europe          NOR                         Norway     56627.6574
-## 135         Europe          POL                         Poland      6620.0704
-## 136         Europe          PRT                       Portugal     17684.0674
-## 137         Europe          ROU                        Romania      3533.2661
-## 138         Europe          SMR                     San Marino     44976.3685
-## 139         Europe          SRB                         Serbia      3168.8807
-## 140         Europe          SVK                Slovak Republic     10437.5099
-## 141         Europe          SVN                       Slovenia     16944.1895
-## 142         Europe          ESP                          Spain     24337.5105
-## 143         Europe          SWE                         Sweden     40261.1220
-## 144         Europe          CHE                    Switzerland     50641.8372
-## 145         Europe          UKR                        Ukraine      1367.3524
-## 146         Europe          GBR                 United Kingdom     35476.3525
-## 147  North America          ATG            Antigua and Barbuda     11076.0636
-## 148  North America          ABW                          Aruba     22566.6822
-## 149  North America          BHS                   Bahamas, The     21490.3571
-## 150  North America          BRB                       Barbados     12893.5912
-## 151  North America          BLZ                         Belize      3991.2843
-## 152  North America          BMU                        Bermuda     70359.3191
-## 153  North America          CAN                         Canada     31011.9112
-## 154  North America          CRI                     Costa Rica      4379.3911
-## 155  North America          CUB                           Cuba      3388.7670
-## 156  North America          DMA                       Dominica      5126.2499
-## 157  North America          DOM             Dominican Republic      2407.1893
-## 158  North America          SLV                    El Salvador      2611.1611
-## 159  North America          GRL                      Greenland     22507.8887
-## 160  North America          GRD                        Grenada      5844.9597
-## 161  North America          GTM                      Guatemala      1937.7157
-## 162  North America          HTI                          Haiti       400.9322
-## 163  North America          HND                       Honduras      1297.1925
-## 164  North America          JAM                        Jamaica      3862.0634
-## 165  North America          MEX                         Mexico      7083.4685
-## 166  North America          NIC                      Nicaragua      1075.9834
-## 167  North America          PAN                         Panama      4292.4196
-## 168  North America          PRI                    Puerto Rico     20698.0730
-## 169  North America          KNA            St. Kitts and Nevis     10275.4697
-## 170  North America          LCA                      St. Lucia      5250.5529
-## 171  North America          VCT St. Vincent and the Grenadines      4813.3297
-## 172  North America          TTO            Trinidad and Tobago      9985.2154
-## 173  North America          USA                  United States     41928.8861
-## 174        Oceania          AUS                      Australia     30464.0038
-## 175        Oceania          FJI                           Fiji      3330.3100
-## 176        Oceania          KIR                       Kiribati      1138.2845
-## 177        Oceania          MHL               Marshall Islands      2517.6934
-## 178        Oceania          FSM          Micronesia, Fed. Sts.      2247.8378
-## 179        Oceania          NZL                    New Zealand     25194.8141
-## 180        Oceania          PLW                          Palau      9601.5303
-## 181        Oceania          PNG               Papua New Guinea       660.1900
-## 182        Oceania          WSM                          Samoa      2094.6295
-## 183        Oceania          SLB                Solomon Islands       819.3263
-## 184        Oceania          TON                          Tonga      2400.2889
-## 185        Oceania          TUV                         Tuvalu      2232.6049
-## 186        Oceania          VUT                        Vanuatu      1788.0171
-## 187  South America          ARG                      Argentina      3997.2433
-## 188  South America          BOL                        Bolivia       954.9221
-## 189  South America          BRA                         Brazil      3607.1916
-## 190  South America          CHL                          Chile      6223.9738
-## 191  South America          COL                       Colombia      2752.9135
-## 192  South America          ECU                        Ecuador      2704.6652
-## 193  South America          GUY                         Guyana      1038.2855
-## 194  South America          PRY                       Paraguay      1386.7460
-## 195  South America          PER                           Peru      2544.3513
-## 196  South America          SUR                       Suriname      3007.9258
-## 197  South America          URY                        Uruguay      4117.6494
-## 198  South America          VEN                  Venezuela, RB      4282.0153
+           row = 1
+           LIMIT 100;&quot;)</code></pre>
+<pre><code>##     continent_name country_code             country_name gdp_per_capita
+## 1           Africa          DZA                  Algeria      2549.9572
+## 2           Africa          AGO                   Angola      1229.3430
+## 3           Africa          ARM                  Armenia      1182.0974
+## 4           Africa          BEN                    Benin       511.2930
+## 5           Africa          BWA                 Botswana      4829.5161
+## 6           Africa          BFA             Burkina Faso       371.2180
+## 7           Africa          BDI                  Burundi       121.8593
+## 8           Africa          CPV               Cabo Verde      2159.2323
+## 9           Africa          CMR                 Cameroon       892.5257
+## 10          Africa          CAF Central African Republic       326.1973
+## 11          Africa          TCD                     Chad       456.7944
+## 12          Africa          COM                  Comoros       619.1105
+## 13          Africa          COD         Congo, Dem. Rep.       124.0497
+## 14          Africa          COG              Congo, Rep.      1347.8709
+## 15          Africa          CIV            Cote d&#39;Ivoire       902.9864
+## 16          Africa          DJI                 Djibouti       869.8002
+## 17          Africa          EGY         Egypt, Arab Rep.      1116.9252
+## 18          Africa          GNQ        Equatorial Guinea      8943.6763
+## 19          Africa          ERI                  Eritrea       226.2899
+## 20          Africa          ETH                 Ethiopia       134.2796
+## 21          Africa          GAB                    Gabon      5328.4852
+## 22          Africa          GMB              Gambia, The       415.8140
+## 23          Africa          GHA                    Ghana       426.2635
+## 24          Africa          GIN                   Guinea       287.9230
+## 25          Africa          GNB            Guinea-Bissau       375.7946
+## 26          Africa          KEN                    Kenya       462.0498
+## 27          Africa          LSO                  Lesotho       645.4935
+## 28          Africa          LBR                  Liberia       146.6412
+## 29          Africa          LBY                    Libya      6062.2145
+## 30          Africa          MDG               Madagascar       245.6705
+## 31          Africa          MWI                   Malawi       208.8558
+## 32          Africa          MLI                     Mali       421.1704
+## 33          Africa          MRT               Mauritania       600.0623
+## 34          Africa          MUS                Mauritius      5054.3181
+## 35          Africa          MAR                  Morocco      1881.9647
+## 36          Africa          MOZ               Mozambique       278.7827
+## 37          Africa          NAM                  Namibia      3298.0107
+## 38          Africa          NER                    Niger       240.2174
+## 39          Africa          NGA                  Nigeria       645.9257
+## 40          Africa          RWA                   Rwanda       225.7514
+## 41          Africa          STP    Sao Tome and Principe       707.7886
+## 42          Africa          SEN                  Senegal       732.2812
+## 43          Africa          SYC               Seychelles      9707.2654
+## 44          Africa          SLE             Sierra Leone       290.4135
+## 45          Africa          ZAF             South Africa      4659.6234
+## 46          Africa          SSD              South Sudan       943.0433
+## 47          Africa          SDN                    Sudan       557.2210
+## 48          Africa          SWZ                Swaziland      2211.0919
+## 49          Africa          TZA                 Tanzania       349.6209
+## 50          Africa          TGO                     Togo       358.8603
+## 51          Africa          TUN                  Tunisia      3139.5291
+## 52          Africa          UGA                   Uganda       285.9642
+## 53          Africa          ZMB                   Zambia       486.7424
+## 54          Africa          ZWE                 Zimbabwe       345.4074
+## 55            Asia          AFG              Afghanistan       220.0563
+## 56            Asia          AZE               Azerbaijan      1045.0264
+## 57            Asia          BHR                  Bahrain     16027.3448
+## 58            Asia          BGD               Bangladesh       400.4725
+## 59            Asia          BTN                   Bhutan      1108.5183
+## 60            Asia          BRN        Brunei Darussalam     21819.2867
+## 61            Asia          KHM                 Cambodia       405.9378
+## 62            Asia          CHN                    China      1490.3801
+## 63            Asia          CYP                   Cyprus     21380.9031
+## 64            Asia          GEO                  Georgia      1186.8730
+## 65            Asia          HKG     Hong Kong SAR, China     24928.1004
+## 66            Asia          IND                    India       649.7106
+## 67            Asia          IDN                Indonesia      1160.6149
+## 68            Asia          IRN       Iran, Islamic Rep.      2353.9310
+## 69            Asia          IRQ                     Iraq      1373.1926
+## 70            Asia          ISR                   Israel     18588.8050
+## 71            Asia          JPN                    Japan     34094.8871
+## 72            Asia          JOR                   Jordan      2156.4398
+## 73            Asia          KAZ               Kazakhstan      2874.2883
+## 74            Asia          KOR              Korea, Rep.     15028.8103
+## 75            Asia          KWT                   Kuwait     27061.8858
+## 76            Asia          KGZ          Kyrgyz Republic       433.2351
+## 77            Asia          LAO                  Lao PDR       415.2223
+## 78            Asia          LBN                  Lebanon      5483.1795
+## 79            Asia          MAC         Macao SAR, China     22371.6137
+## 80            Asia          MYS                 Malaysia      4918.1667
+## 81            Asia          MDV                 Maldives      3335.1950
+## 82            Asia          MNG                 Mongolia       798.0244
+## 83            Asia          NPL                    Nepal       291.8690
+## 84            Asia          OMN                     Oman     10013.6332
+## 85            Asia          PAK                 Pakistan       631.4978
+## 86            Asia          PHL              Philippines      1084.7655
+## 87            Asia          QAT                    Qatar     44051.6573
+## 88            Asia          RUS       Russian Federation      4108.5623
+## 89            Asia          SAU             Saudi Arabia     10853.6275
+## 90            Asia          SGP                Singapore     27047.1400
+## 91            Asia          LKA                Sri Lanka      1063.1606
+## 92            Asia          SYR     Syrian Arab Republic      1419.2642
+## 93            Asia          TJK               Tajikistan       311.5502
+## 94            Asia          THA                 Thailand      2478.8176
+## 95            Asia          TLS              Timor-Leste       456.0156
+## 96            Asia          TUR                   Turkey      5866.7447
+## 97            Asia          TKM             Turkmenistan      1455.9361
+## 98            Asia          ARE     United Arab Emirates     33012.8151
+## 99            Asia          UZB               Uzbekistan       465.1199
+## 100           Asia          VNM                  Vietnam       606.8947
 ##     running_total
 ## 1         1066915
 ## 2         1066915
@@ -892,105 +566,7 @@ running_total</p>
 ## 97        5114295
 ## 98        5114295
 ## 99        5114295
-## 100       5114295
-## 101       5114295
-## 102       5114295
-## 103      12691573
-## 104      12691573
-## 105      12691573
-## 106      12691573
-## 107      12691573
-## 108      12691573
-## 109      12691573
-## 110      12691573
-## 111      12691573
-## 112      12691573
-## 113      12691573
-## 114      12691573
-## 115      12691573
-## 116      12691573
-## 117      12691573
-## 118      12691573
-## 119      12691573
-## 120      12691573
-## 121      12691573
-## 122      12691573
-## 123      12691573
-## 124      12691573
-## 125      12691573
-## 126      12691573
-## 127      12691573
-## 128      12691573
-## 129      12691573
-## 130      12691573
-## 131      12691573
-## 132      12691573
-## 133      12691573
-## 134      12691573
-## 135      12691573
-## 136      12691573
-## 137      12691573
-## 138      12691573
-## 139      12691573
-## 140      12691573
-## 141      12691573
-## 142      12691573
-## 143      12691573
-## 144      12691573
-## 145      12691573
-## 146      12691573
-## 147       3557261
-## 148       3557261
-## 149       3557261
-## 150       3557261
-## 151       3557261
-## 152       3557261
-## 153       3557261
-## 154       3557261
-## 155       3557261
-## 156       3557261
-## 157       3557261
-## 158       3557261
-## 159       3557261
-## 160       3557261
-## 161       3557261
-## 162       3557261
-## 163       3557261
-## 164       3557261
-## 165       3557261
-## 166       3557261
-## 167       3557261
-## 168       3557261
-## 169       3557261
-## 170       3557261
-## 171       3557261
-## 172       3557261
-## 173       3557261
-## 174       1009280
-## 175       1009280
-## 176       1009280
-## 177       1009280
-## 178       1009280
-## 179       1009280
-## 180       1009280
-## 181       1009280
-## 182       1009280
-## 183       1009280
-## 184       1009280
-## 185       1009280
-## 186       1009280
-## 187        642410
-## 188        642410
-## 189        642410
-## 190        642410
-## 191        642410
-## 192        642410
-## 193        642410
-## 194        642410
-## 195        642410
-## 196        642410
-## 197        642410
-## 198        642410</code></pre>
+## 100       5114295</code></pre>
 <ol start="7" style="list-style-type: decimal">
 <li>Find the country with the highest average gdp_per_capita for each continent for all years. Now compare your list to the following data set. Please describe any and all mistakes that you can find with the data set below. Include any code that you use to help detect these mistakes.</li>
 </ol>

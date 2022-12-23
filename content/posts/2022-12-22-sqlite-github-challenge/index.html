@@ -417,7 +417,7 @@ growth_percent</p>
           AND growth_percent IS NOT NULL),
         my_tbl AS(
           SELECT
-          RANK() OVER(PARTITION BY continent_name ORDER BY growth_percent DESC) AS my_rank,
+          DENSE_RANK() OVER(PARTITION BY continent_name ORDER BY growth_percent DESC) AS my_rank,
           continent_name,
           country_code,
           country_name, 
@@ -435,18 +435,19 @@ growth_percent</p>
 ## 4       10           Asia          UZB          Uzbekistan   0.1112318716
 ## 5       11           Asia          IRQ                Iraq   0.1006412989
 ## 6       12           Asia          PHL         Philippines   0.0973229843
-## 7       10         Europe          LVA              Latvia   0.0086499251
-## 8       11         Europe          TUR              Turkey   0.0057724142
-## 9       11         Europe          TUR              Turkey   0.0057724142
-## 10      10  North America          GTM           Guatemala   0.0270868977
-## 11      11  North America          HND            Honduras   0.0270737695
-## 12      12  North America          ATG Antigua and Barbuda   0.0252273401
-## 13      10        Oceania          FJI                Fiji   0.0329314724
-## 14      11        Oceania          TUV              Tuvalu   0.0126544897
-## 15      12        Oceania          KIR            Kiribati   0.0003711351
-## 16      10  South America          ARG           Argentina   0.0567481665
-## 17      11  South America          PRY            Paraguay  -0.0362061634
-## 18      12  South America          BRA              Brazil  -0.0983190462</code></pre>
+## 7       10         Europe          LTU           Lithuania   0.0010073402
+## 8       11         Europe          EST             Estonia  -0.0031343083
+## 9       12         Europe          AZE          Azerbaijan  -0.0034469864
+## 10      12         Europe          AZE          Azerbaijan  -0.0034469864
+## 11      10  North America          GTM           Guatemala   0.0270868977
+## 12      11  North America          HND            Honduras   0.0270737695
+## 13      12  North America          ATG Antigua and Barbuda   0.0252273401
+## 14      10        Oceania          FJI                Fiji   0.0329314724
+## 15      11        Oceania          TUV              Tuvalu   0.0126544897
+## 16      12        Oceania          KIR            Kiribati   0.0003711351
+## 17      10  South America          ARG           Argentina   0.0567481665
+## 18      11  South America          PRY            Paraguay  -0.0362061634
+## 19      12  South America          BRA              Brazil  -0.0983190462</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>For the year 2012, create a 3 column, 1 row report showing the percent share of gdp_per_capita for the following regions:</li>
 </ol>

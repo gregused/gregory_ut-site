@@ -145,7 +145,7 @@ dbGetQuery(
           AND growth_percent IS NOT NULL),
         my_tbl AS(
           SELECT
-          RANK() OVER(PARTITION BY continent_name ORDER BY growth_percent DESC) AS my_rank,
+          DENSE_RANK() OVER(PARTITION BY continent_name ORDER BY growth_percent DESC) AS my_rank,
           continent_name,
           country_code,
           country_name, 

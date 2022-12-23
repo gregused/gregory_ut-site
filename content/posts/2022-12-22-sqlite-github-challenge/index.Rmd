@@ -10,3 +10,322 @@ tags:
   - blogdown
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# library(tidyverse)
+# 
+# read_csv("https://raw.githubusercontent.com/AlexanderConnelly/BrainTree_SQL_Coding_Challenge_Data_Analyst/master/data_csv/continent_map.csv") %>%
+#   write_csv(., "continent_map.csv")
+# 
+# read_csv("https://raw.githubusercontent.com/AlexanderConnelly/BrainTree_SQL_Coding_Challenge_Data_Analyst/master/data_csv/continents.csv") %>%
+#   write_csv(., "continents.csv")
+# 
+# read_csv("https://raw.githubusercontent.com/AlexanderConnelly/BrainTree_SQL_Coding_Challenge_Data_Analyst/master/data_csv/countries.csv") %>%
+#   write_csv(., "countires.csv")
+# 
+# read_csv("https://raw.githubusercontent.com/AlexanderConnelly/BrainTree_SQL_Coding_Challenge_Data_Analyst/master/data_csv/per_capita.csv") %>%
+#   write_csv(., "per_capita.csv")
+
+library(RSQLite)
+library(DBI)
+```
+
+[link](https://github.com/AlexanderConnelly/BrainTree_SQL_Coding_Challenge_Data_Analyst)
+
+```{r}
+
+con <- dbConnect(RSQLite::SQLite(), "C:\\Users\\grish\\Desktop\\sql-challenge\\my_db.db")
+
+dbListTables(con)
+
+dbGetQuery(con, "SELECT * FROM continents;")
+dbGetQuery(con, "SELECT * FROM countries LIMIT 10;")
+dbGetQuery(con, "SELECT * FROM continent_map LIMIT 10;")
+dbGetQuery(con, "SELECT * FROM per_capita LIMIT 10;")
+
+
+```
+
+# question 1
+1. Data Integrity Checking & Cleanup
+
+Alphabetically list all of the country codes in the continent_map table that appear more than once. Display any values where country_code is null as country_code = "FOO" and make this row appear first in the list, even though it should alphabetically sort to the middle. Provide the results of this query as your answer.
+
+For all countries that have multiple rows in the continent_map table, delete all multiple records leaving only the 1 record per country. The record that you keep should be the first one when sorted by the continent_code alphabetically ascending. Provide the query/ies and explanation of step(s) that you follow to delete these records.
+
+```{r}
+
+# 1.1
+dbGetQuery(
+  con,
+  "WITH foo_tbl AS (SELECT continent_code,
+           CASE WHEN country_code = 'NA' THEN 'FOO' ELSE country_code END AS country_code
+  FROM continent_map)
+  SELECT country_code,
+  COUNT(*) as my_count
+  FROM foo_tbl
+  WHERE country_code = 'FOO'
+  GROUP BY country_code
+  HAVING COUNT(*) > 1
+  UNION
+  SELECT country_code,
+           COUNT(*) AS my_count
+           FROM continent_map
+           WHERE country_code <> 'NA'
+           GROUP BY country_code
+           HAVING COUNT(*) > 1
+  ORDER BY my_count DESC;")
+
+# 1.2
+dbGetQuery(
+  con,
+  "WITH cte AS(
+          SELECT cm.*,
+          CASE WHEN country_code IS NULL THEN 'FOO' END AS country_code,
+          ROW_NUMBER() OVER(PARTITION BY country_code ORDER BY country_code) AS dup_count 
+  FROM continent_map AS cm)
+          SELECT DISTINCT country_code, continent_code
+          FROM cte WHERE dup_count == 1
+          ORDER BY country_code;"
+)
+
+```
+
+2. List the countries ranked 10-12 in each continent by the percent of year-over-year growth descending from 2011 to 2012.
+
+The percent of growth should be calculated as: ((2012 gdp - 2011 gdp) / 2011 gdp)
+
+The list should include the columns:
+
+rank
+continent_name
+country_code
+country_name
+growth_percent
+```{r}
+# Part 2.1
+dbGetQuery(
+  con,
+  "WITH ranked_tbl AS(
+           SELECT *,
+           ctr.country_name,
+           CASE WHEN pc.year = 2011 THEN gdp_per_capita ELSE NULL END AS gdp_2011,
+           CASE WHEN pc.year = 2012 THEN gdp_per_capita ELSE NULL END AS gdp_2012
+           FROM per_capita AS pc
+           LEFT JOIN continent_map cm ON pc.country_code = cm.country_code
+           LEFT JOIN continents cc ON cm.continent_code = cc.continent_code
+           LEFT JOIN countries ctr ON pc.country_code = ctr.country_code
+           WHERE pc.year IN(2011, 2012)),
+          wide_tbl AS(
+           SELECT continent_name,
+            country_name,
+           gdp_2011,
+           gdp_2012,
+           country_code
+           FROM ranked_tbl
+           ORDER BY country_code),
+           deduped_tbl AS (
+            SELECT
+            wbl.continent_name,
+            wbl.country_code,
+            wbl.country_name,
+             ((wb.gdp_2012 - wbl.gdp_2011) / wbl.gdp_2011) AS growth_percent
+          FROM wide_tbl wbl
+          LEFT JOIN wide_tbl wb ON wbl.country_code = wb.country_code
+          WHERE wbl.gdp_2011 IS NOT NULL
+          AND wb.gdp_2012 IS NOT NULL 
+          AND growth_percent IS NOT NULL),
+        my_tbl AS(
+          SELECT
+          RANK() OVER(PARTITION BY continent_name ORDER BY growth_percent DESC) AS my_rank,
+          continent_name,
+          country_code,
+          country_name, 
+          growth_percent
+  FROM deduped_tbl)
+  SELECT my_rank, continent_name, country_code, country_name, growth_percent
+  FROM my_tbl
+  WHERE continent_name IS NOT NULL AND
+  my_rank BETWEEN 10 AND 12;"
+)
+```
+
+
+3. For the year 2012, create a 3 column, 1 row report showing the percent share of gdp_per_capita for the following regions:
+
+(i) Asia, (ii) Europe, (iii) the Rest of the World. Your result should look something like
+```{r}
+# Part 3.1
+dbGetQuery(con, "with gdp_df as (SELECT *,
+           CAST(gdp_per_capita AS int)
+           FROM per_capita
+           LEFT JOIN continent_map ON per_capita.country_code = continent_map.country_code
+           LEFT JOIN continents ON continent_map.continent_code = continents.continent_code
+           WHERE year = 2012),
+           cc_df AS (
+           SELECT continent_name, COUNT(*) as cc
+           FROM gdp_df
+           GROUP BY continent_name
+           HAVING continent_name IS NOT NULL),
+           cc2 AS(SELECT *, 
+           CASE WHEN continent_name IN('Africa', 'North America', 'Oceania', 'South America') THEN 'Rest of World' ELSE continent_name END AS continent_name2
+           FROM cc_df
+           ),
+           cc2_grp AS(
+           SELECT continent_name2,
+           SUM(cc) AS cc
+           FROM cc2
+           GROUP BY continent_name2),
+           cc3_grp AS (SELECT 
+           continent_name2,
+           cc,
+           SUM(cc) OVER() as pp
+           FROM cc2_grp
+           GROUP BY continent_name2)
+           SELECT continent_name2,
+           ROUND((cc / (pp * 1.00)) * 100, 0) as perc
+           FROM cc3_grp;")
+
+
+```
+
+4a. What is the count of countries and sum of their related gdp_per_capita values for the year 2007 where the string 'an' (case insensitive) appears anywhere in the country name?
+```{r}
+dbGetQuery(con, "with gdp_df as (SELECT *
+           FROM per_capita
+           LEFT JOIN continent_map ON per_capita.country_code = continent_map.country_code
+           LEFT JOIN continents ON continent_map.continent_code = continents.continent_code
+           LEFT JOIN  countries ON per_capita.country_code = countries.country_code
+           WHERE year = 2007)
+           SELECT
+           COUNT(*) OVER() as count,
+           SUM(gdp_per_capita) OVER() as sum 
+           FROM gdp_df
+           WHERE country_name LIKE '%an%'
+           LIMIT 1")
+
+```
+
+4b. Repeat question 4a, but this time make the query case sensitive.
+```{r}
+dbGetQuery(con, "with gdp_df as (SELECT *
+           FROM per_capita
+           LEFT JOIN continent_map ON per_capita.country_code = continent_map.country_code
+           LEFT JOIN continents ON continent_map.continent_code = continents.continent_code
+           LEFT JOIN  countries ON per_capita.country_code = countries.country_code
+           WHERE year = 2007)
+           SELECT
+           COUNT(*) OVER() as count,
+           SUM(gdp_per_capita) OVER() as sum 
+           FROM gdp_df
+           WHERE country_name LIKE '%an'
+           LIMIT 1")
+```
+
+
+5. Find the sum of gpd_per_capita by year and the count of countries for each year that have non-null gdp_per_capita where (i) the year is before 2012 and (ii) the country has a null gdp_per_capita in 2012. Your result should have the columns:
+
+year
+country_count
+total
+```{r}
+dbGetQuery(con, "SELECT year,
+           COUNT(*) OVER(PARTITION BY country_name) as country_count,
+           SUM(gdp_per_capita) AS total
+           FROM per_capita
+           LEFT JOIN continent_map ON per_capita.country_code = continent_map.country_code
+           LEFT JOIN continents ON continent_map.continent_code = continents.continent_code
+           LEFT JOIN countries ON per_capita.country_code = countries.country_code
+           GROUP BY year
+           HAVING gdp_per_capita NOT NULL AND
+           year < 2012;")
+
+```
+
+6. All in a single query, execute all of the steps below and provide the results as your final answer:
+
+a. create a single list of all per_capita records for year 2009 that includes columns:
+
+continent_name
+country_code
+country_name
+gdp_per_capita
+
+b. order this list by:
+
+continent_name ascending
+characters 2 through 4 (inclusive) of the country_name descending
+
+c. create a running total of gdp_per_capita by continent_name
+
+d. return only the first record from the ordered list for which each continent's running total of gdp_per_capita meets or exceeds $70,000.00 with the following columns:
+
+continent_name
+country_code
+country_name
+gdp_per_capita
+running_total
+```{r}
+dbGetQuery(con, "
+                 WITH cdf AS (SELECT 
+           continents.continent_name,
+           continents.continent_code,
+           countries.country_name,
+           per_capita.gdp_per_capita,
+           SUM(gdp_per_capita) OVER(PARTITION BY continent_name) AS running_total,
+           ROW_NUMBER() OVER(PARTITION BY country_name ORDER BY gdp_per_capita) as row
+           FROM per_capita
+           LEFT JOIN continent_map ON per_capita.country_code = continent_map.country_code
+           LEFT JOIN continents ON continent_map.continent_code = continents.continent_code
+           LEFT JOIN countries ON per_capita.country_code = countries.country_code 
+           WHERE continent_name IS NOT NULL
+           ORDER BY continent_name,
+           SUBSTRING(country_name, 2, 4) DESC)
+           SELECT continent_name,
+           country_code,
+           countries.country_name,
+           gdp_per_capita,
+           running_total
+           FROM cdf
+           LEFT JOIN countries ON cdf.country_name = countries.country_name
+           WHERE running_total >= 70000.00 AND
+           row = 1;")
+
+
+
+```
+
+7. Find the country with the highest average gdp_per_capita for each continent for all years. Now compare your list to the following data set. Please describe any and all mistakes that you can find with the data set below. Include any code that you use to help detect these mistakes.
+```{r}
+dbGetQuery(con, "WITH avg_df AS (SELECT 
+           per_capita.year,
+           continents.continent_code,
+           continents.continent_name,
+           countries.country_code,
+           countries.country_name,
+           AVG(per_capita.gdp_per_capita) OVER(PARTITION BY country_name) as avg_gdp
+           FROM per_capita
+           LEFT JOIN continent_map ON per_capita.country_code = continent_map.country_code
+           LEFT JOIN continents ON continent_map.continent_code = continents.continent_code
+           LEFT JOIN countries ON per_capita.country_code = countries.country_code
+           WHERE continents.continent_name IS NOT NULL AND
+           per_capita.gdp_per_capita IS NOT NULL),
+           rank_df AS(SELECT *,
+           RANK() OVER(PARTITION BY continent_name ORDER BY avg_gdp DESC) as my_rank
+           FROM avg_df)
+           SELECT my_rank,
+           continent_name,
+           country_code,
+           country_name,
+           avg_gdp
+           FROM rank_df
+           GROUP BY my_rank,
+           continent_name,
+           country_code,
+           country_name,
+           avg_gdp
+           HAVING my_rank = 1
+           LIMIT 20")
+
+```
+
